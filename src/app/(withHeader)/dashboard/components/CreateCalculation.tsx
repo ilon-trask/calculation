@@ -1,5 +1,6 @@
 "use client";
 
+import useNonAuthUserId from "@/app/hooks/useNonAuthUserId";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,9 +13,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 function CreateCalculation() {
+  const userId = useNonAuthUserId();
+
   return (
     <>
       <Dialog>
