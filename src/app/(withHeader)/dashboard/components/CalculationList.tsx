@@ -5,28 +5,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Calculation } from "@prisma/client";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const mockData: { id: number; name: string; description: string }[] = [
-  { id: 1, name: "first", description: "slkjdf" },
-  { id: 2, name: "second", description: "other" },
-  { id: 3, name: "third", description: "234" },
-];
-function CalculationList() {
+function CalculationList({ calculations }: { calculations: Calculation[] }) {
   const router = useRouter();
   return (
     <div className="mt-20 grid grid-cols-3 gap-6">
-      {mockData.map((el) => (
+      {calculations.map((el) => (
         <Card
+          key={el.id}
           className="cursor-pointer"
           onClick={() => router.push("/calculation/" + el.id)}
         >
           <CardHeader className="flex justify-between flex-row align-top">
             <div>
               <CardTitle>{el.name}</CardTitle>
-              <CardDescription>{el.description}</CardDescription>
+              <CardDescription>{el.description} &nbsp;</CardDescription>
             </div>
             <DotsVerticalIcon />
           </CardHeader>

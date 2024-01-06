@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import CalculationList from "./components/CalculationList";
 import CreateCalculation from "./components/CreateCalculation";
+import { getCalculations } from "./dashboard.actions";
+import { cookies } from "next/headers";
 
 // <div className="max-w-fit">
 // <div className="flex items-center space-x-1 rounded-md bg-secondary text-secondary-foreground">
@@ -38,14 +40,16 @@ import CreateCalculation from "./components/CreateCalculation";
 // </div>
 // </div>
 
-function page() {
+async function page() {
+  const userId = cookies().get("userId")?.value;
+  const calculations = userId ? await getCalculations({ userId }) : [];
   return (
     <>
       <div className="flex justify-between">
         <H2>Мої калькуляції</H2>
-        <CreateCalculation />
+        <CreateCalculation serverUserId={userId} />
       </div>
-      <CalculationList />
+      <CalculationList calculations={calculations} />
     </>
   );
 }

@@ -4,11 +4,15 @@ import { v4 } from "uuid";
 function useNonAuthUserId() {
   return useMemo(() => {
     const label = "userId";
-    const userId = localStorage.getItem(label);
-    if (userId) return userId;
-    const newId = v4();
-    localStorage.setItem(label, newId);
-    return newId;
+    if (document.cookie.includes(label)) {
+      const userIdMatch = document.cookie.match(/userId=([^;]+)/);
+      if (!userIdMatch) throw new Error("");
+      console.log(userIdMatch[1]);
+      return userIdMatch[1];
+    }
+    const userId = v4();
+    document.cookie = `userId=${userId}; path=/`;
+    return userId;
   }, []);
 }
 
