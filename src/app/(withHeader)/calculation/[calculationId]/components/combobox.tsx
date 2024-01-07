@@ -78,13 +78,13 @@ export function Combobox() {
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <div className="flex">
+          {/* <div className="flex">
             <Input />
             <Button>
               <ChevronRightIcon />
             </Button>
-          </div>
-          {/* <CommandInput placeholder="Пошук" className="h-9" /> */}
+          </div> */}
+          <CommandInput placeholder="Пошук" className="h-9" />
           <CommandEmpty>
             Такої одиниці немає. <br />
             Додайте свою!

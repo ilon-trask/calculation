@@ -2,12 +2,12 @@
 import H4 from "@/components/ui/H4";
 import { useRouter } from "next/navigation";
 import React from "react";
-const mockData: { name: string; link: string }[] = [
-  { name: "first", link: "" },
-];
 
-function Breadcrumb() {
+function Breadcrumb({ name }: { name: string | undefined }) {
   const router = useRouter();
+  const mockData: { name: string | undefined; link: string }[] = [
+    { name, link: "" },
+  ];
   return (
     <div className="flex gap-2">
       <H4

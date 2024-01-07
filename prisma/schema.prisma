@@ -39,4 +39,6 @@ model Cost {
   unitOfMeasurement String
   calculation       Calculation @relation(fields: [calculationId], references: [id])
   calculationId     Int
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 }

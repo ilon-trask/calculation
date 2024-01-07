@@ -11,7 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,7 +24,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createCalculation } from "../dashboard.actions";
+import { createCalculation } from "../../../data/Calculation.actions";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -36,13 +36,18 @@ const formSchema = z.object({
 
 function CreateCalculation({
   serverUserId,
+  isOpen,
+  setIsOpen,
+  chosenCalcId,
 }: {
   serverUserId: string | undefined;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  chosenCalcId: number;
 }) {
   const router = useRouter();
   const userId = serverUserId || useNonAuthUserId();
 
-  const [isOpen, setIsOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,9 +66,9 @@ function CreateCalculation({
   }
   return (
     <>
-      <Dialog open={isOpen}>
+      <Dialog open={isOpen} onOpenChange={(e) => setIsOpen(e)}>
         <DialogTrigger asChild>
-          <Button onClick={() => setIsOpen(true)}>Додати калькуляцію</Button>
+          <Button>Додати калькуляцію</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
