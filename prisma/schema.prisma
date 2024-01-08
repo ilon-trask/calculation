@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  id          String        @id @default(uuid())
-  name        String
-  role        String
-  sub         String?
-  Calculation Calculation[]
+  id                String              @id @default(uuid())
+  name              String
+  role              String
+  sub               String?
+  Calculation       Calculation[]
+  UnitOfMeasurement UnitOfMeasurement[]
 }
 
 model Calculation {
@@ -27,18 +28,27 @@ model Calculation {
   isUserRegistered Boolean
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  Cost             Cost[]
+  costs            Cost[]
+}
+
+model UnitOfMeasurement {
+  id     Int     @id @default(autoincrement())
+  name   String
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+  Cost   Cost[]
 }
 
 model Cost {
-  id                Int         @id @default(autoincrement())
-  name              String
-  type              String
-  amount            Float
-  price             Float
-  unitOfMeasurement String
-  calculation       Calculation @relation(fields: [calculationId], references: [id])
-  calculationId     Int
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  id                  Int               @id @default(autoincrement())
+  name                String
+  type                String
+  amount              Float
+  price               Float
+  unitOfMeasurement   UnitOfMeasurement @relation(fields: [unitOfMeasurementId], references: [id])
+  calculation         Calculation       @relation(fields: [calculationId], references: [id])
+  calculationId       Int
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  unitOfMeasurementId Int
 }

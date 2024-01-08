@@ -1,7 +1,7 @@
 "use server";
 
 import prismadb from "@/lib/prismadb";
-import { Calculation, Cost } from "@prisma/client";
+import { Calculation, Cost, UnitOfMeasurement } from "@prisma/client";
 
 export async function createCalculation(values: {
   name: string;
@@ -41,8 +41,12 @@ export async function getCalculation({
   return calculation;
 }
 
+export interface CostWithUnit extends Cost {
+  unitOfMeasurement?: UnitOfMeasurement;
+}
+
 export interface CalculationWithItemsType extends Calculation {
-  Cost: Cost[];
+  costs: CostWithUnit[];
 }
 
 export async function getCalculationWithItems({
@@ -53,10 +57,9 @@ export async function getCalculationWithItems({
   const calculation = await prismadb.calculation.findUnique({
     where: { id: calculationId },
     include: {
-      Cost: {
-        orderBy: {
-          createdAt: "asc",
-        },
+      costs: {
+        orderBy: { createdAt: "asc" },
+        include: { unitOfMeasurement: true },
       },
     },
   });

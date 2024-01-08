@@ -11,13 +11,14 @@ import {
 import Text from "@/components/ui/Text";
 import { PlusIcon, Trash2 } from "lucide-react";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { Cost } from "@prisma/client";
+import { Cost, UnitOfMeasurement } from "@prisma/client";
 import { deleteCost } from "@/app/data/Cost.actions";
 import { useRouter } from "next/navigation";
 import ActiveRow from "./components/ActiveRow";
 import DeleteDialog from "@/app/(withHeader)/components/DeleteDialog";
+import { CostWithUnit } from "@/app/data/Calculation.actions";
 
-export type RowType = Omit<Cost, "id" | "amount" | "price" | "type"> & {
+export type RowType = Omit<CostWithUnit, "id" | "amount" | "price" | "type"> & {
   id?: number;
   isActive: boolean;
   clientId: number;
@@ -31,6 +32,7 @@ export const typeArr = [
   { name: "Послуга" },
   { name: "Матеріал" },
   { name: "Транспорт" },
+  { name: "Не визначино" },
 ] as const;
 
 export type TypesOfType = (typeof typeArr)[number]["name"];
@@ -61,7 +63,7 @@ function PassiveRow(
         <Text>{data.name}</Text>
       </TableCell>
       <TableCell>
-        <Text>{data.unitOfMeasurement}</Text>
+        <Text>{data.unitOfMeasurement?.name}</Text>
       </TableCell>
       <TableCell>
         <Text>{data.type}</Text>
@@ -93,15 +95,25 @@ function PassiveRow(
 function Row({
   data,
   setData,
+  units,
+  serverUserId,
 }: {
   data: RowType;
   setData: Dispatch<SetStateAction<RowType[]>>;
+  units: UnitOfMeasurement[];
+  serverUserId: string;
 }) {
   const [isActive, setIsActive] = useState(data.isActive);
 
   if (isActive)
     return (
-      <ActiveRow data={data} setData={setData} setIsActive={setIsActive} />
+      <ActiveRow
+        data={data}
+        setData={setData}
+        setIsActive={setIsActive}
+        units={units}
+        serverUserId={serverUserId}
+      />
     );
 
   return <PassiveRow data={data} setIsActive={setIsActive} isOwner />;
@@ -112,11 +124,15 @@ function CalculationTable({
   costs,
   calculationId,
   isOwner,
+  units,
+  serverUserId,
 }: {
   className?: string;
   costs: Cost[];
   calculationId: number;
   isOwner: boolean;
+  units: UnitOfMeasurement[];
+  serverUserId: string;
 }) {
   const [data, setData] = useState<RowType[]>([]);
   const displayedData = [
@@ -135,7 +151,6 @@ function CalculationTable({
       <TableHeader>
         <TableRow>
           <TableHead>Назва</TableHead>
-          {/* <TableHead className="w-[180px]">Назва</TableHead> */}
           <TableHead>Одиниці виміру</TableHead>
           <TableHead>Тип</TableHead>
           <TableHead className="text-right ">Кількість</TableHead>
@@ -148,7 +163,13 @@ function CalculationTable({
         {displayedData.map((cost) => (
           <>
             {isOwner ? (
-              <Row data={cost} key={cost.clientId} setData={setData} />
+              <Row
+                data={cost}
+                key={cost.clientId}
+                setData={setData}
+                units={units}
+                serverUserId={serverUserId}
+              />
             ) : (
               <PassiveRow key={cost.clientId} data={cost} isOwner={isOwner} />
             )}
@@ -167,7 +188,7 @@ function CalculationTable({
                       {
                         clientId: costs.length + prev.length + 1,
                         name: "",
-                        unitOfMeasurement: "",
+                        unitOfMeasurementId: "" as any,
                         isActive: true,
                         amount: "",
                         price: "",
