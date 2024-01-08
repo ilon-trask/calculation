@@ -10,9 +10,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Calculation } from "@prisma/client";
@@ -21,14 +18,11 @@ import { Edit, Link, Share, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { memo } from "react";
 import { deleteCalculation } from "../../../data/Calculation.actions";
+import DeleteDialog from "../../components/DeleteDialog";
 
 function CalculationList({ calculations }: { calculations: Calculation[] }) {
   const router = useRouter();
-  const deleteHandle = async (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    id: number
-  ) => {
-    e.stopPropagation();
+  const deleteHandle = async (id: number) => {
     await deleteCalculation({ calculationId: id });
     router.refresh();
   };
@@ -67,12 +61,20 @@ function CalculationList({ calculations }: { calculations: Calculation[] }) {
                     {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    className="text-red-500"
-                    onClick={(e) => deleteHandle(e, el.id)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
                   >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    <span>Delete</span>
-                    {/* <DropdownMenuShortcut>⌘K</DropdownMenuShortcut> */}
+                    <DeleteDialog
+                      title="калькуляцію"
+                      func={() => deleteHandle(el.id)}
+                    >
+                      <div className="flex items-center text-red-500">
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Delete</span>
+                      </div>
+                    </DeleteDialog>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               </DropdownMenuContent>

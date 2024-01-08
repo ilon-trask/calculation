@@ -65,7 +65,6 @@ function PassiveRow({
   const cost = +data.amount * +data.price || 0;
   const router = useRouter();
   return (
-    // <TableRow>
     <TableRow onClick={() => setIsActive(true)}>
       <TableCell className="font-medium">
         <Text>{data.name}</Text>
@@ -90,7 +89,9 @@ function PassiveRow({
             await deleteCost(data.id!);
             router.refresh();
           }}
-        />
+        >
+          <Trash2 />
+        </DeleteDialog>
       </TableCell>
     </TableRow>
   );

@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -10,10 +9,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
-function DeleteDialog({ title, func }: { title: string; func: () => void }) {
+function DeleteDialog({
+  title,
+  func,
+  children,
+}: {
+  title: string;
+  func: () => void;
+  children: React.ReactNode;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Dialog open={isOpen} onOpenChange={(e) => setIsOpen(e)}>
@@ -33,7 +39,7 @@ function DeleteDialog({ title, func }: { title: string; func: () => void }) {
             setIsOpen(true);
           }}
         >
-          <Trash2 />
+          {children}
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

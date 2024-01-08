@@ -206,7 +206,9 @@ function ActiveRow({
               await deleteCost(data.id!);
               router.refresh();
             }}
-          />
+          >
+            <Trash2 />
+          </DeleteDialog>
         ) : (
           <Trash2
             onClick={(e) => {
