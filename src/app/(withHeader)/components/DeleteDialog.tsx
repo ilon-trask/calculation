@@ -62,7 +62,7 @@ function DeleteDialog({
             </Button>
             <Button
               type="button"
-              className="bg-red-500 hover:bg-red-700"
+              variant={"destructive"}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

@@ -19,7 +19,6 @@ async function page({
   const units = await prismadb.unitOfMeasurement.findMany({
     where: { OR: [{ userId }, { userId: null }] },
   });
-  console.log(units);
   const isOwner = userId == calculation.userId;
   return (
     <div>

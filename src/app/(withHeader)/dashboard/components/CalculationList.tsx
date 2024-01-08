@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Calculation } from "@prisma/client";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Edit, Link, Share, Trash2 } from "lucide-react";
+import { Edit, Link, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, memo } from "react";
 import { deleteCalculation } from "../../../data/Calculation.actions";
