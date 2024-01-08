@@ -13,19 +13,23 @@ function DashboardContent({
   calculations: Calculation[];
 }) {
   const [chosenCalcId, setChosenCalcId] = useState(0);
-  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
       <div className="flex justify-between">
         <H2>Мої калькуляції</H2>
         <CreateCalculation
           serverUserId={userId}
-          isOpen={isOpenDialog}
-          setIsOpen={setIsOpenDialog}
-          chosenCalcId={chosenCalcId}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          chosenCalc={calculations.find((el) => el.id == chosenCalcId)}
         />
       </div>
-      <CalculationList calculations={calculations} />
+      <CalculationList
+        calculations={calculations}
+        setIsOpen={setIsOpen}
+        setChosenCalcId={setChosenCalcId}
+      />
     </>
   );
 }

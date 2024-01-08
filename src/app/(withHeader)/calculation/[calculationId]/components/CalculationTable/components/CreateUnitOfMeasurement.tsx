@@ -5,7 +5,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -21,7 +20,7 @@ import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createUnit } from "./units.actions";
+import { createUnit } from "@/app/data/units.actions";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Назва не може бути порожня" }),

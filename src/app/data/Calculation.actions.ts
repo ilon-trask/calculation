@@ -5,7 +5,7 @@ import { Calculation, Cost, UnitOfMeasurement } from "@prisma/client";
 
 export async function createCalculation(values: {
   name: string;
-  description?: string;
+  description?: string | null;
   userId: string;
   isUserRegistered: boolean;
 }) {
@@ -20,6 +20,20 @@ export async function createCalculation(values: {
     });
   }
   const data = await prismadb.calculation.create({ data: values });
+  return data;
+}
+
+export async function updateCalculation(values: {
+  id: number;
+  name: string;
+  description?: string | null;
+  userId: string;
+  isUserRegistered: boolean;
+}) {
+  const data = await prismadb.calculation.update({
+    data: values,
+    where: { id: values.id },
+  });
   return data;
 }
 

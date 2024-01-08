@@ -16,11 +16,19 @@ import { Calculation } from "@prisma/client";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { Edit, Link, Share, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { memo } from "react";
+import React, { Dispatch, SetStateAction, memo } from "react";
 import { deleteCalculation } from "../../../data/Calculation.actions";
 import DeleteDialog from "../../components/DeleteDialog";
 
-function CalculationList({ calculations }: { calculations: Calculation[] }) {
+function CalculationList({
+  calculations,
+  setChosenCalcId,
+  setIsOpen,
+}: {
+  calculations: Calculation[];
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setChosenCalcId: Dispatch<SetStateAction<number>>;
+}) {
   const router = useRouter();
   const deleteHandle = async (id: number) => {
     await deleteCalculation({ calculationId: id });
@@ -46,7 +54,15 @@ function CalculationList({ calculations }: { calculations: Calculation[] }) {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsOpen(true);
+                      setChosenCalcId(el.id);
+                    }}
+                  >
                     <Edit className="mr-2 h-4 w-4" />
                     <span>Edit</span>
                     {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}

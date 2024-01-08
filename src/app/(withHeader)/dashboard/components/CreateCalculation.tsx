@@ -24,43 +24,60 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createCalculation } from "../../../data/Calculation.actions";
+import {
+  createCalculation,
+  updateCalculation,
+} from "../../../data/Calculation.actions";
 import { useRouter } from "next/navigation";
+import { Calculation } from "@prisma/client";
 
 const formSchema = z.object({
   name: z.string().min(3, {
-    message: "Назва повинне містити більше 2 символів",
+    message: "Назва повинна містити більше 2 символів",
   }),
-  description: z.string().optional(),
+  description: z.string().optional().nullable(),
 });
 
 function CreateCalculation({
   serverUserId,
   isOpen,
   setIsOpen,
-  chosenCalcId,
+  chosenCalc,
 }: {
   serverUserId: string | undefined;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  chosenCalcId: number;
+  chosenCalc: Calculation | undefined;
 }) {
   const router = useRouter();
   const userId = serverUserId || useNonAuthUserId();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    values: {
+      name: chosenCalc?.name || "",
+      description: chosenCalc?.description || null,
+    },
     defaultValues: {
       name: "",
       description: "",
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const data = await createCalculation({
-      ...values,
-      isUserRegistered: false,
-      userId,
-    });
+    if (chosenCalc) {
+      const data = await updateCalculation({
+        ...values,
+        isUserRegistered: false,
+        userId,
+        id: chosenCalc.id,
+      });
+    } else {
+      const data = await createCalculation({
+        ...values,
+        isUserRegistered: false,
+        userId,
+      });
+    }
     setIsOpen(false);
     router.refresh();
   }
@@ -68,11 +85,17 @@ function CreateCalculation({
     <>
       <Dialog open={isOpen} onOpenChange={(e) => setIsOpen(e)}>
         <DialogTrigger asChild>
-          <Button>Додати калькуляцію</Button>
+          <Button>
+            {!chosenCalc ? "Додати калькуляцію" : "Редагувати калькуляцію"}
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Створення калькуляції</DialogTitle>
+            <DialogTitle>
+              {!chosenCalc
+                ? "Створення калькуляції"
+                : "Редагування калькуляції"}
+            </DialogTitle>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -98,7 +121,10 @@ function CreateCalculation({
                     <FormItem>
                       <FormLabel>Опис</FormLabel>
                       <FormControl>
-                        <Input placeholder="Опис" {...field} />
+                        {
+                          //@ts-ignore
+                          <Input placeholder="Опис" {...field} />
+                        }
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -106,7 +132,9 @@ function CreateCalculation({
                 />
               </div>
               <DialogFooter>
-                <Button type="submit">Створити</Button>
+                <Button type="submit">
+                  {!chosenCalc ? "Створити" : "Зберегти"}
+                </Button>
               </DialogFooter>
             </form>
           </Form>
