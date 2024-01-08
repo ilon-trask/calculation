@@ -1,10 +1,8 @@
-import H2 from "@/components/ui/H2";
 import React from "react";
-import CalculationList from "./components/CalculationList";
-import CreateCalculation from "./components/CreateCalculation";
 import { getCalculations } from "../../data/Calculation.actions";
 import { cookies } from "next/headers";
 import DashboardContent from "./components/DashboardContent";
+import getUserIdCookies from "@/app/hooks/getUserIdCookies";
 
 // <div className="max-w-fit">
 // <div className="flex items-center space-x-1 rounded-md bg-secondary text-secondary-foreground">
@@ -41,7 +39,7 @@ import DashboardContent from "./components/DashboardContent";
 // </div>
 
 async function page() {
-  const userId = cookies().get("userId")?.value;
+  const userId = getUserIdCookies();
   const calculations = userId ? await getCalculations({ userId }) : [];
   return <DashboardContent userId={userId} calculations={calculations} />;
 }

@@ -27,7 +27,7 @@ function CalculationList({ calculations }: { calculations: Calculation[] }) {
     router.refresh();
   };
   return (
-    <div className="mt-20 grid grid-cols-3 gap-6">
+    <div className="mt-10 grid grid-cols-3 gap-6">
       {calculations.map((el) => (
         <Card
           key={el.id}
