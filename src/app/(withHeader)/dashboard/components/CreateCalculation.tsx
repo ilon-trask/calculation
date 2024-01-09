@@ -1,6 +1,5 @@
 "use client";
 
-import useNonAuthUserId from "@/app/hooks/useNonAuthUserId";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -44,13 +43,13 @@ function CreateCalculation({
   setIsOpen,
   chosenCalc,
 }: {
-  serverUserId: string | undefined;
+  serverUserId: string;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   chosenCalc: Calculation | undefined;
 }) {
   const router = useRouter();
-  const userId = serverUserId || useNonAuthUserId();
+  const userId = serverUserId;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

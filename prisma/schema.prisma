@@ -17,6 +17,8 @@ model User {
   sub               String?
   Calculation       Calculation[]
   UnitOfMeasurement UnitOfMeasurement[]
+
+  @@index([sub])
 }
 
 model Calculation {

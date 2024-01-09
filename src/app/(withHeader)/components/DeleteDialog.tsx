@@ -33,7 +33,6 @@ function DeleteDialog({
         <DialogTrigger
           className="cursor-pointer"
           onClick={(e) => {
-            console.log("sddsfsf");
             e.preventDefault();
             e.stopPropagation();
             setIsOpen(true);

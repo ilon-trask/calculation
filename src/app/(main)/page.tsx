@@ -16,7 +16,11 @@ export default function Home() {
         <p>Продукція</p>
       </div>
       <div className="flex justify-center mt-28 gap-8">
-        <Button size={"lg"} variant={"outline"}>
+        <Button
+          size={"lg"}
+          variant={"outline"}
+          onClick={() => router.push("/sign-in")}
+        >
           Увійти
         </Button>
         <Button onClick={() => router.push("/dashboard")} size={"lg"}>

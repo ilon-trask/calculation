@@ -9,12 +9,6 @@ export async function createCalculation(values: {
   userId: string;
   isUserRegistered: boolean;
 }) {
-  const user = await prismadb.user.findUnique({ where: { id: values.userId } });
-  if (!user) {
-    await prismadb.user.create({
-      data: { id: values.userId, name: "", role: "unRegistered" },
-    });
-  }
   const data = await prismadb.calculation.create({ data: values });
   return data;
 }

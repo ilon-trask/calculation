@@ -31,7 +31,6 @@ import CreateUnitOfMeasurement from "./CreateUnitOfMeasurement";
 
 async function createCostHandler(values: RowType) {
   if (values.id) {
-    console.log("update" + values);
     const cost = await updateCost({
       id: values.id!,
       amount: +values.amount,
@@ -45,7 +44,6 @@ async function createCostHandler(values: RowType) {
     });
     return cost;
   } else {
-    console.log("create" + values);
     const cost = await createCost({
       amount: +values.amount,
       calculationId: values.calculationId,
@@ -54,7 +52,6 @@ async function createCostHandler(values: RowType) {
       type: values.type,
       unitOfMeasurementId: values.unitOfMeasurementId,
     });
-    console.log(cost);
     return cost;
   }
 }
@@ -83,6 +80,7 @@ function ActiveRow({
   };
   useEffect(() => {
     const timeoutId = setTimeout(() => {
+      // I did this to check whether this is the second render out of two
       check = !check;
       if (check) {
         if (

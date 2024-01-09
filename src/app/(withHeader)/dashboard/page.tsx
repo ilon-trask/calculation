@@ -1,47 +1,22 @@
 import React from "react";
 import { getCalculations } from "../../data/Calculation.actions";
-import { cookies } from "next/headers";
 import DashboardContent from "./components/DashboardContent";
-import getUserIdCookies from "@/app/hooks/getUserIdCookies";
-
-// <div className="max-w-fit">
-// <div className="flex items-center space-x-1 rounded-md bg-secondary text-secondary-foreground">
-//   <Button variant="secondary" className="px-3 shadow-none">
-//     <StarIcon className="mr-2 h-4 w-4" />
-//     Star
-//   </Button>
-//   <DropdownMenu>
-//     <DropdownMenuTrigger asChild>
-//       <Button variant="secondary" className="px-2 shadow-none">
-//         <ChevronDownIcon className="h-4 w-4 text-secondary-foreground" />
-//       </Button>
-//     </DropdownMenuTrigger>
-//     <DropdownMenuContent
-//       align="end"
-//       alignOffset={-5}
-//       className="w-[200px]"
-//       forceMount
-//     >
-//       <DropdownMenuLabel>Suggested Lists</DropdownMenuLabel>
-//       <DropdownMenuSeparator />
-//       <DropdownMenuCheckboxItem checked>
-//         Future Ideas
-//       </DropdownMenuCheckboxItem>
-//       <DropdownMenuCheckboxItem>My Stack</DropdownMenuCheckboxItem>
-//       <DropdownMenuCheckboxItem>Inspiration</DropdownMenuCheckboxItem>
-//       <DropdownMenuSeparator />
-//       <DropdownMenuItem>
-//         <PlusIcon className="mr-2 h-4 w-4" /> Create List
-//       </DropdownMenuItem>
-//     </DropdownMenuContent>
-//   </DropdownMenu>
-// </div>
-// </div>
+import getUser from "@/app/hooks/getUser";
+import supabaseServer from "@/lib/supabaseServer";
 
 async function page() {
-  const userId = getUserIdCookies();
-  const calculations = userId ? await getCalculations({ userId }) : [];
-  return <DashboardContent userId={userId} calculations={calculations} />;
+  const user = await getUser();
+  const { data } = await supabaseServer.auth.getSession();
+  const calculations = user?.id
+    ? await getCalculations({ userId: user.id })
+    : [];
+  return (
+    <DashboardContent
+      userId={user?.id}
+      calculations={calculations}
+      supaUser={data.session?.user}
+    />
+  );
 }
 
 export default page;

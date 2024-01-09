@@ -46,14 +46,18 @@ function page() {
     resolver: zodResolver(schema),
   });
   const [err, setErr] = useState("");
+  const [show, setShow] = useState(false);
   const router = useRouter();
   const onSubmit = async (res: z.infer<typeof schema>) => {
     const { data, error } = await supabaseClient.auth.signUp({
       email: res.email,
       password: res.password,
+      options: {
+        emailRedirectTo: "http://localhost:3000/auth/callback",
+      },
     });
     if (!error) {
-      router.push("/dashboard");
+      setShow(true);
     } else {
       setErr(error.message);
     }
@@ -101,6 +105,11 @@ function page() {
                   </FormItem>
                 )}
               />
+              {show ? (
+                <p className="text-sm font-medium">
+                  Лист для підтвердження було надіслано на пошту
+                </p>
+              ) : null}
               {err ? (
                 <p className="text-sm font-medium text-destructive">{err}</p>
               ) : null}
@@ -113,7 +122,6 @@ function page() {
             <Button variant="link" onClick={() => router.push("/sign-in")}>
               Уже маєте аккаунт? Увійти
             </Button>
-            <Button variant="link">Забули пароль</Button>
           </div>
         </CardContent>
       </Card>

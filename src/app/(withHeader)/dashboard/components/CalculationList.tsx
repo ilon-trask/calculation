@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, memo } from "react";
 import { deleteCalculation } from "../../../data/Calculation.actions";
 import DeleteDialog from "../../components/DeleteDialog";
+import { DEPLOY_URL } from "@/app/data/DeployUrl";
 
 function CalculationList({
   calculations,
@@ -33,6 +34,14 @@ function CalculationList({
   const deleteHandle = async (id: number) => {
     await deleteCalculation({ calculationId: id });
     router.refresh();
+  };
+  const handleCopyClick = async (calcId: number) => {
+    const textToCopy = DEPLOY_URL + "/calculation/" + calcId;
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+    } catch (error) {
+      console.error("Error copying text:", error);
+    }
   };
   return (
     <div className="mt-10 grid grid-cols-3 gap-6">
@@ -52,7 +61,7 @@ function CalculationList({
               <DropdownMenuTrigger asChild>
                 <DotsVerticalIcon className="h-5 w-5" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
+              <DropdownMenuContent className="w-32">
                 <DropdownMenuGroup>
                   <DropdownMenuItem
                     className="cursor-pointer"
@@ -65,16 +74,16 @@ function CalculationList({
                   >
                     <Edit className="mr-2 h-4 w-4" />
                     <span>Edit</span>
-                    {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                   </DropdownMenuItem>
-                  {/* <DropdownMenuItem>
-                    {/* <Trash2 className="mr-2 h-4 w-4" /> 
-                    <span>lksjdf</span>
-                  </DropdownMenuItem> */}
-                  <DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCopyClick(el.id);
+                    }}
+                  >
                     <Link className="mr-2 h-4 w-4" />
                     <span>Copy link</span>
-                    {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={(e) => {

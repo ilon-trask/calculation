@@ -54,6 +54,7 @@ function page() {
 
     if (!error) {
       router.push("/dashboard");
+      router.refresh();
     } else {
       setErr(error.message);
     }
@@ -121,7 +122,6 @@ function page() {
             <Button variant="link" onClick={() => router.push("/sign-up")}>
               Немає аккаунту? Зареєструватись
             </Button>
-            <Button variant="link">Забули пароль</Button>
           </div>
         </CardContent>
       </Card>
