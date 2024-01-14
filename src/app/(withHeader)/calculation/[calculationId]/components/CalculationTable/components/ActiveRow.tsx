@@ -87,7 +87,7 @@ function ActiveRow({
           !rowState.amount ||
           !rowState.price ||
           !rowState.type ||
-          !rowState.unitOfMeasurement
+          !rowState.unitOfMeasurementId
         ) {
           return;
         }

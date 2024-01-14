@@ -161,7 +161,7 @@ function CalculationTable({
       </TableHeader>
       <TableBody>
         {displayedData.map((cost) => (
-          <>
+          <React.Fragment key={cost.clientId}>
             {isOwner ? (
               <Row
                 data={cost}
@@ -173,7 +173,7 @@ function CalculationTable({
             ) : (
               <PassiveRow key={cost.clientId} data={cost} isOwner={isOwner} />
             )}
-          </>
+          </React.Fragment>
         ))}
       </TableBody>
       <TableFooter>

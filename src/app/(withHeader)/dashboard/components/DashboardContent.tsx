@@ -7,6 +7,7 @@ import { Calculation } from "@prisma/client";
 import useNonAuthUserId from "@/app/hooks/useNonAuthUserId";
 import NonAuthUserDialog from "./NonAuthUserDialog";
 import { User } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 
 function DashboardContent({
   userId,
@@ -17,12 +18,16 @@ function DashboardContent({
   calculations: Calculation[];
   supaUser: User | undefined;
 }) {
+  const router = useRouter();
   const [chosenCalcId, setChosenCalcId] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [isUser, setIsUser] = useState(false);
   useLayoutEffect(() => {
     setIsUser(!supaUser);
   }, []);
+  useLayoutEffect(() => {
+    router.refresh();
+  }, [userId]);
   if (!supaUser) {
     useNonAuthUserId();
   }
