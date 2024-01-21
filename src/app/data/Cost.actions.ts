@@ -41,7 +41,9 @@ export async function updateCost(values: Cost) {
   const cost = await prismadb.cost.update({
     data: {
       ...values,
+      //@ts-ignore
       amount: +values.amount,
+      //@ts-ignore
       price: +values.price,
     },
     where: { id: values.id },
