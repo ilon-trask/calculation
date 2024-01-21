@@ -36,7 +36,7 @@ function CalculationList({
     router.refresh();
   };
   const handleCopyClick = async (calcId: number) => {
-    const textToCopy = DEPLOY_URL + "/calculation/" + calcId;
+    const textToCopy = DEPLOY_URL + "/document/" + calcId;
     try {
       await navigator.clipboard.writeText(textToCopy);
     } catch (error) {
@@ -49,7 +49,7 @@ function CalculationList({
         <Card
           key={el.id}
           className="cursor-pointer"
-          onClick={() => router.push("/calculation/" + el.id)}
+          onClick={() => router.push("/document/" + el.id)}
         >
           <CardHeader className="flex justify-between flex-row align-top">
             <div>
@@ -61,7 +61,7 @@ function CalculationList({
               <DropdownMenuTrigger asChild>
                 <DotsVerticalIcon className="h-5 w-5" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-32">
+              <DropdownMenuContent className="w-52">
                 <DropdownMenuGroup>
                   <DropdownMenuItem
                     className="cursor-pointer"
@@ -73,7 +73,7 @@ function CalculationList({
                     }}
                   >
                     <Edit className="mr-2 h-4 w-4" />
-                    <span>Edit</span>
+                    <span>Редагувати</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="cursor-pointer"
@@ -83,7 +83,7 @@ function CalculationList({
                     }}
                   >
                     <Link className="mr-2 h-4 w-4" />
-                    <span>Copy link</span>
+                    <span>Скопіювати посилання</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={(e) => {
@@ -97,7 +97,7 @@ function CalculationList({
                     >
                       <div className="flex items-center text-red-500">
                         <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Delete</span>
+                        <span>Видалити</span>
                       </div>
                     </DeleteDialog>
                   </DropdownMenuItem>

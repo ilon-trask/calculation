@@ -106,16 +106,20 @@ function page() {
                 )}
               />
               {show ? (
-                <p className="text-sm font-medium">
-                  Лист для підтвердження було надіслано на пошту
+                <p className="text-sm font-medium text-red-500">
+                  Лист для підтвердження було надіслано на пошту.
+                  <br />
+                  Перегляньте пошту та активуйте посилання
                 </p>
               ) : null}
               {err ? (
                 <p className="text-sm font-medium text-destructive">{err}</p>
               ) : null}
-              <Button type="submit" className="w-full">
-                Створити аккаунт
-              </Button>
+              {!show ? (
+                <Button type="submit" className="w-full">
+                  Створити аккаунт
+                </Button>
+              ) : null}
             </form>
           </Form>
           <div className="text-center">

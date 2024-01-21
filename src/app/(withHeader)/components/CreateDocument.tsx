@@ -10,14 +10,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,9 +25,10 @@ import {
 import {
   createCalculation,
   updateCalculation,
-} from "../../../data/Calculation.actions";
+} from "../../data/Calculation.actions";
 import { useRouter } from "next/navigation";
 import { Calculation } from "@prisma/client";
+import { DocsType } from "@/app/data/Docs";
 
 const formSchema = z.object({
   name: z.string().min(3, {
@@ -37,17 +37,22 @@ const formSchema = z.object({
   description: z.string().optional().nullable(),
 });
 
-function CreateCalculation({
+function CreateDocument({
+  section,
   serverUserId,
   isOpen,
   setIsOpen,
   chosenCalc,
+  children,
 }: {
+  section: DocsType;
   serverUserId: string;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   chosenCalc: Calculation | undefined;
+  children?: React.ReactNode;
 }) {
+  console.log(section);
   const router = useRouter();
   const userId = serverUserId;
 
@@ -57,10 +62,7 @@ function CreateCalculation({
       name: chosenCalc?.name || "",
       description: chosenCalc?.description || null,
     },
-    defaultValues: {
-      name: "",
-      description: "",
-    },
+    defaultValues: { name: "", description: "" },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (chosenCalc) {
@@ -68,6 +70,7 @@ function CreateCalculation({
         ...values,
         isUserRegistered: false,
         userId,
+        section,
         id: chosenCalc.id,
       });
     } else {
@@ -75,7 +78,9 @@ function CreateCalculation({
         ...values,
         isUserRegistered: false,
         userId,
+        section,
       });
+      router.push("/dashboard");
     }
     setIsOpen(false);
     router.refresh();
@@ -84,16 +89,18 @@ function CreateCalculation({
     <>
       <Dialog open={isOpen} onOpenChange={(e) => setIsOpen(e)}>
         <DialogTrigger asChild>
-          <Button>
-            {!chosenCalc ? "Додати калькуляцію" : "Редагувати калькуляцію"}
-          </Button>
+          {children ?? (
+            <Button>
+              {!chosenCalc ? "Додати калькуляцію" : "Редагувати калькуляцію"}
+            </Button>
+          )}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>
               {!chosenCalc
-                ? "Створення калькуляції"
-                : "Редагування калькуляції"}
+                ? "Створення назви документу"
+                : "Редагування назви документу"}
             </DialogTitle>
           </DialogHeader>
           <Form {...form}>
@@ -143,4 +150,4 @@ function CreateCalculation({
   );
 }
 
-export default CreateCalculation;
+export default CreateDocument;

@@ -25,6 +25,7 @@ model Calculation {
   id               Int      @id @default(autoincrement())
   name             String
   description      String?
+  section          String?
   User             User     @relation(fields: [userId], references: [id])
   userId           String
   isUserRegistered Boolean
@@ -44,10 +45,12 @@ model UnitOfMeasurement {
 model Cost {
   id                  Int               @id @default(autoincrement())
   name                String
-  type                String
+  type                String?
   amount              Float
-  price               Float
+  price               Float?
   unitOfMeasurement   UnitOfMeasurement @relation(fields: [unitOfMeasurementId], references: [id])
+  note                String?
+  section             String?
   calculation         Calculation       @relation(fields: [calculationId], references: [id])
   calculationId       Int
   createdAt           DateTime          @default(now())

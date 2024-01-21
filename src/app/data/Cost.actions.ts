@@ -1,10 +1,35 @@
 "use server";
 
 import prismadb from "@/lib/prismadb";
-import { Cost } from "@prisma/client";
-import { RowType } from "../(withHeader)/calculation/[calculationId]/components/CalculationTable/CalculationTable";
+import { Cost, UnitOfMeasurement } from "@prisma/client";
+import { DocsType } from "./Docs";
 
 type createCostType = Omit<Cost, "id" | "createdAt" | "updatedAt">;
+
+export interface CostWithUnit extends Cost {
+  unitOfMeasurement?: UnitOfMeasurement;
+  section: DocsType;
+}
+
+type WorkSetType = Omit<CostWithUnit, "price" | "type"> & {
+  section: "Набір робіт, матеріалів та послуг";
+};
+type DefectiveActType = Omit<WorkSetType, "section"> & {
+  section: "Дефектний акт (скорочений)";
+};
+type CalculationType = Omit<CostWithUnit, "note"> & {
+  section: "Калькуляція (скорочена)";
+};
+
+export type CostType = Omit<CostWithUnit, "note" | "price"> &
+  (
+    | WorkSetType
+    | CalculationType
+    | DefectiveActType
+    | {
+        section: "Рахунок фактура";
+      }
+  );
 
 export async function createCost(values: createCostType) {
   const res = await prismadb.cost.create({

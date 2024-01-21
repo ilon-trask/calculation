@@ -3,7 +3,6 @@ import prismadb from "@/lib/prismadb";
 import getUserIdCookies from "./getUserIdCookies";
 import supabaseServer from "@/lib/supabaseServer";
 import { v4 } from "uuid";
-import { useRouter } from "next/router";
 
 async function getUser() {
   // const router = useRouter();

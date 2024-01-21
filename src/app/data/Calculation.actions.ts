@@ -2,11 +2,14 @@
 
 import prismadb from "@/lib/prismadb";
 import { Calculation, Cost, UnitOfMeasurement } from "@prisma/client";
+import { DocsType } from "./Docs";
+import { CostType, CostWithUnit } from "./Cost.actions";
 
 export async function createCalculation(values: {
   name: string;
   description?: string | null;
   userId: string;
+  section: DocsType;
   isUserRegistered: boolean;
 }) {
   const data = await prismadb.calculation.create({ data: values });
@@ -18,6 +21,7 @@ export async function updateCalculation(values: {
   name: string;
   description?: string | null;
   userId: string;
+  section: DocsType;
   isUserRegistered: boolean;
 }) {
   const data = await prismadb.calculation.update({
@@ -45,19 +49,16 @@ export async function getCalculation({
   return calculation;
 }
 
-export interface CostWithUnit extends Cost {
-  unitOfMeasurement?: UnitOfMeasurement;
-}
-
-export interface CalculationWithItemsType extends Calculation {
-  costs: CostWithUnit[];
+export interface CalculationType extends Omit<Calculation, "section"> {
+  costs: CostType[];
+  section: DocsType;
 }
 
 export async function getCalculationWithItems({
   calculationId,
 }: {
   calculationId: number;
-}): Promise<CalculationWithItemsType | null> {
+}): Promise<CalculationType | null> {
   const calculation = await prismadb.calculation.findUnique({
     where: { id: calculationId },
     include: {
@@ -67,6 +68,7 @@ export async function getCalculationWithItems({
       },
     },
   });
+  //@ts-ignore
   return calculation;
 }
 
