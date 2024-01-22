@@ -120,7 +120,7 @@ async function page({
       </p>
       <div className="ml-8">
         <p className="mt-5 font-semibold text-lg">{calculation.name}</p>
-        <p className="mt-2 ">{calculation.description}</p>
+        <p className="mt-2">{calculation.description}</p>
       </div>
       <Table
         calculation={calculation}
