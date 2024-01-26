@@ -5,13 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Calculation } from "@prisma/client";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { Edit, Link, Trash2 } from "lucide-react";
@@ -20,6 +13,7 @@ import React, { Dispatch, SetStateAction, memo } from "react";
 import { deleteCalculation } from "../../../data/Calculation.actions";
 import DeleteDialog from "../../components/DeleteDialog";
 import { DEPLOY_URL } from "@/app/data/DeployUrl";
+import DocumentDropDown from "./DocumentDropDown";
 
 function CalculationList({
   calculations,
@@ -31,18 +25,6 @@ function CalculationList({
   setChosenCalcId: Dispatch<SetStateAction<number>>;
 }) {
   const router = useRouter();
-  const deleteHandle = async (id: number) => {
-    await deleteCalculation({ calculationId: id });
-    router.refresh();
-  };
-  const handleCopyClick = async (calcId: number) => {
-    const textToCopy = DEPLOY_URL + "/document/" + calcId;
-    try {
-      await navigator.clipboard.writeText(textToCopy);
-    } catch (error) {
-      console.error("Error copying text:", error);
-    }
-  };
   return (
     <div className="mt-10 grid grid-cols-3 gap-6">
       {calculations.map((el) => (
@@ -56,54 +38,12 @@ function CalculationList({
               <CardTitle>{el.name}</CardTitle>
               <CardDescription>{el.description} &nbsp;</CardDescription>
             </div>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <DotsVerticalIcon className="h-5 w-5" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-52">
-                <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setIsOpen(true);
-                      setChosenCalcId(el.id);
-                    }}
-                  >
-                    <Edit className="mr-2 h-4 w-4" />
-                    <span>Редагувати</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCopyClick(el.id);
-                    }}
-                  >
-                    <Link className="mr-2 h-4 w-4" />
-                    <span>Скопіювати посилання</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                  >
-                    <DeleteDialog
-                      title="калькуляцію"
-                      func={() => deleteHandle(el.id)}
-                    >
-                      <div className="flex items-center text-red-500">
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Видалити</span>
-                      </div>
-                    </DeleteDialog>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <DocumentDropDown
+              id={el.id}
+              setChosenCalcId={setChosenCalcId}
+              setIsOpenDialog={setIsOpen}
+              inCalculation={false}
+            />
           </CardHeader>
         </Card>
       ))}

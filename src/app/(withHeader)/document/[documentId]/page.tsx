@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 import Breadcrumb from "./components/Breadcrumb";
 import {
   CalculationType,
@@ -8,6 +8,7 @@ import prismadb from "@/lib/prismadb";
 import { UnitOfMeasurement } from "@prisma/client";
 import WorkSetTable from "./components/Tables/DashboardTable/DashboardTable";
 import getUser from "@/app/hooks/getUser";
+import DocumentTitle from "./components/DocumentTitle";
 
 //дефектний акт
 //набір робіт
@@ -97,9 +98,13 @@ function Table({
 
 async function page({
   params,
+  className,
+  ref,
 }: {
   params: { documentId: string };
   searchParams: {};
+  className: string;
+  ref: RefObject<HTMLDivElement>;
 }) {
   const calculation = +params.documentId
     ? await getCalculationWithItems({ calculationId: +params.documentId })
@@ -111,13 +116,10 @@ async function page({
     where: { OR: [{ userId: user.id }, { userId: null }] },
   });
   const isOwner = user.id == calculation.userId;
-  console.log(isOwner);
   return (
-    <div>
+    <div className={className} ref={ref}>
       <Breadcrumb name={calculation.name} />
-      <p className="text-center mt-8 font-semibold text-xl uppercase">
-        {calculation.section}
-      </p>
+      <DocumentTitle userId={user.id} calculation={calculation} />
       <div className="ml-8">
         <p className="mt-5 font-semibold text-lg">{calculation.name}</p>
         <p className="mt-2">{calculation.description}</p>
