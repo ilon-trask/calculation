@@ -28,8 +28,9 @@ function DocumentTitle({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         chosenCalc={calculation}
-        children={" "}
-      />
+      >
+        {""}
+      </CreateDocument>
     </div>
   );
 }

@@ -98,13 +98,10 @@ function Table({
 
 async function page({
   params,
-  className,
-  ref,
+  searchParams,
 }: {
   params: { documentId: string };
   searchParams: {};
-  className: string;
-  ref: RefObject<HTMLDivElement>;
 }) {
   const calculation = +params.documentId
     ? await getCalculationWithItems({ calculationId: +params.documentId })
@@ -117,7 +114,7 @@ async function page({
   });
   const isOwner = user?.id == calculation.userId;
   return (
-    <div className={className} ref={ref}>
+    <div>
       <Breadcrumb name={calculation.name} />
       <DocumentTitle userId={user?.id} calculation={calculation} />
       <div className="ml-8">
