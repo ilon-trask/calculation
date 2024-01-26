@@ -9,7 +9,7 @@ function DocumentTitle({
   userId,
 }: {
   calculation: CalculationType;
-  userId: string;
+  userId: string | undefined;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   return (

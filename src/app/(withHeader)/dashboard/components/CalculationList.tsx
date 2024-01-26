@@ -6,13 +6,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Calculation } from "@prisma/client";
-import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Edit, Link, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, memo } from "react";
-import { deleteCalculation } from "../../../data/Calculation.actions";
-import DeleteDialog from "../../components/DeleteDialog";
-import { DEPLOY_URL } from "@/app/data/DeployUrl";
 import DocumentDropDown from "./DocumentDropDown";
 
 function CalculationList({

@@ -4,7 +4,6 @@ import React, { useLayoutEffect, useState } from "react";
 import CreateDocument from "../../components/CreateDocument";
 import CalculationList from "./CalculationList";
 import { Calculation } from "@prisma/client";
-import useNonAuthUserId from "@/app/hooks/useNonAuthUserId";
 import NonAuthUserDialog from "./NonAuthUserDialog";
 import { User } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
@@ -14,7 +13,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { Docs, DocsType } from "@/app/data/Docs";
 
 function DashboardContent({
@@ -31,15 +29,9 @@ function DashboardContent({
   const [isOpen, setIsOpen] = useState(false);
   const [section, setSection] = useState<DocsType>();
   const [isUser, setIsUser] = useState(false);
-  useLayoutEffect(() => {
-    setIsUser(!supaUser);
-  }, []);
-  useLayoutEffect(() => {
-    router.refresh();
-  }, [userId]);
-  if (!supaUser) {
-    useNonAuthUserId();
-  }
+  useLayoutEffect(() => setIsUser(!supaUser), []);
+  useLayoutEffect(() => router.refresh(), [userId]);
+
   return (
     <>
       <div className="flex justify-end">
@@ -83,9 +75,7 @@ function DashboardContent({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         chosenCalc={calculations.find((el) => el.id == chosenCalcId)}
-      >
-        {""}
-      </CreateDocument>
+      ></CreateDocument>
       <NonAuthUserDialog isOpen={isUser} setIsOpen={setIsUser} />
     </>
   );

@@ -111,15 +111,15 @@ async function page({
     : null;
   if (!calculation) throw new Error("Такої калькуляції немає");
   const user = await getUser();
-  if (!user) throw new Error("не зареєстровані");
+  // if (!user) throw new Error("не зареєстровані");
   const units = await prismadb.unitOfMeasurement.findMany({
-    where: { OR: [{ userId: user.id }, { userId: null }] },
+    where: { OR: [{ userId: user?.id }, { userId: null }] },
   });
-  const isOwner = user.id == calculation.userId;
+  const isOwner = user?.id == calculation.userId;
   return (
     <div className={className} ref={ref}>
       <Breadcrumb name={calculation.name} />
-      <DocumentTitle userId={user.id} calculation={calculation} />
+      <DocumentTitle userId={user?.id} calculation={calculation} />
       <div className="ml-8">
         <p className="mt-5 font-semibold text-lg">{calculation.name}</p>
         <p className="mt-2">{calculation.description}</p>
@@ -128,7 +128,7 @@ async function page({
         calculation={calculation}
         isOwner={isOwner}
         units={units}
-        userId={user.id}
+        userId={user?.id}
       />
     </div>
   );

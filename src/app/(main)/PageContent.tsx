@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import useNonAuthUserId from "../hooks/useNonAuthUserId";
 import { User } from "@supabase/auth-helpers-nextjs";
 import { Docs, DocsType } from "../data/Docs";
 import CreateDocument from "../(withHeader)/components/CreateDocument";
@@ -18,9 +17,6 @@ function PageContent({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [section, setSection] = useState<DocsType>();
-  if (!supaUser) {
-    useNonAuthUserId();
-  }
   const router = useRouter();
   return (
     <main>
