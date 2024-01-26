@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Edit, Link, Trash2 } from "lucide-react";
+import { Edit, Link, Printer, SendHorizontal, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { deleteCalculation } from "@/app/data/Calculation.actions";
 import { DEPLOY_URL } from "@/app/data/DeployUrl";
@@ -68,7 +68,7 @@ function DocumentDropDown(props: PropsType) {
                     printHandle(id);
                   }}
                 >
-                  <Edit className="mr-2 h-4 w-4" />
+                  <Printer className="mr-2 h-4 w-4" />
                   <span>Друк</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -78,7 +78,7 @@ function DocumentDropDown(props: PropsType) {
                     e.stopPropagation();
                   }}
                 >
-                  <Edit className="mr-2 h-4 w-4" />
+                  <SendHorizontal className="mr-2 h-4 w-4" />
                   <span>Відправити на пошту</span>
                 </DropdownMenuItem>
               </>

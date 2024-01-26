@@ -14,7 +14,7 @@ function DocumentTitle({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="flex items-center mt-8 justify-center gap-4">
-      <p className="text-center  font-semibold text-xl uppercase">
+      <p className="text-center font-semibold text-xl uppercase">
         {calculation.section}
       </p>
       <DocumentDropDown
