@@ -115,7 +115,9 @@ function BusinessPopUp({
             {isIncome ? (
               <Button
                 onClick={() => {
-                  const dateOfCost = new Date(rowState.date);
+                  if (rowState.date) {
+                    const dateOfCost = new Date(rowState.date);
+                  }
                   delete rowState.date;
                   const cost = createCost({
                     ...rowState,
