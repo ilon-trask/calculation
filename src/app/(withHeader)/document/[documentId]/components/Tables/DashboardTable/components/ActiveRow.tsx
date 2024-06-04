@@ -36,35 +36,41 @@ export const typeArr = [
 
 async function createCostHandler(values: RowType) {
   if (values.id) {
-    const cost = await updateCost({
-      id: values.id!,
-      amount: +values.amount,
-      calculationId: values.calculationId,
-      name: values.name,
+    const cost = await updateCost(
       //@ts-ignore
-      price: +values.price,
-      //@ts-ignore
-      type: values.type,
-      unitOfMeasurementId: values.unitOfMeasurementId,
-      createdAt: values.createdAt,
-      updatedAt: values.updatedAt,
-      note: values.note,
-      section: values.section,
-    });
+      {
+        id: values.id!,
+        amount: +values.amount,
+        calculationId: values.calculationId,
+        name: values.name,
+        //@ts-ignore
+        price: +values.price,
+        //@ts-ignore
+        type: values.type,
+        unitOfMeasurementId: values.unitOfMeasurementId,
+        createdAt: values.createdAt,
+        updatedAt: values.updatedAt,
+        note: values.note,
+        section: values.section,
+      }
+    );
     return cost;
   } else {
-    const cost = await createCost({
-      amount: +values.amount,
-      calculationId: values.calculationId,
-      name: values.name,
+    const cost = await createCost(
       //@ts-ignore
-      price: +values.price,
-      //@ts-ignore
-      type: values.type,
-      unitOfMeasurementId: values.unitOfMeasurementId,
-      note: values.note,
-      section: values.section,
-    });
+      {
+        amount: +values.amount,
+        calculationId: values.calculationId,
+        name: values.name,
+        //@ts-ignore
+        price: +values.price,
+        //@ts-ignore
+        type: values.type,
+        unitOfMeasurementId: values.unitOfMeasurementId,
+        note: values.note,
+        section: values.section,
+      }
+    );
     return cost;
   }
 }

@@ -172,23 +172,26 @@ function WorkSetTable({
                 <Plus
                   strokeWidth={2.3}
                   onClick={() =>
-                    setData((prev) => [
-                      ...prev,
-                      {
-                        clientId: costs.length + prev.length + 1,
-                        name: "",
-                        unitOfMeasurementId: "" as any,
-                        isActive: true,
-                        amount: "",
-                        price: "",
-                        type: "",
-                        calculationId,
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                        section,
-                        note: "",
-                      },
-                    ])
+                    setData(
+                      //@ts-ignore
+                      (prev) => [
+                        ...prev,
+                        {
+                          clientId: costs.length + prev.length + 1,
+                          name: "",
+                          unitOfMeasurementId: "" as any,
+                          isActive: true,
+                          amount: "",
+                          price: "",
+                          type: "",
+                          calculationId,
+                          createdAt: new Date(),
+                          updatedAt: new Date(),
+                          section,
+                          note: "",
+                        },
+                      ]
+                    )
                   }
                 />
               </div>

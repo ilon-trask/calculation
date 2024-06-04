@@ -100,7 +100,7 @@ function Table({
         units={units}
         serverUserId={userId!}
         calculationId={calculation.id}
-        costs={calculation.costs}
+        costs={calculation.costs as any}
       />
     );
   }

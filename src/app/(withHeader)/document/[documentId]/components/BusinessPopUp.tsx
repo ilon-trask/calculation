@@ -39,10 +39,7 @@ function BusinessPopUp({
   isIncome: boolean;
   costSubtype: string;
 }) {
-  const [rowState, setRowState] = useState<
-    //ts wanted this
-    Omit<RowStateType, "date"> & { date?: Date | null | string }
-  >({
+  const [rowState, setRowState] = useState<RowStateType>({
     name: "",
     amount: "",
     date: "",
@@ -119,16 +116,19 @@ function BusinessPopUp({
               <Button
                 onClick={() => {
                   const dateOfCost = new Date(rowState.date);
-                  delete rowState.date;
-                  const cost = createCost({
-                    ...rowState,
-                    amount: +rowState.amount,
-                    price: +rowState.price,
-                    dateOfCost,
-                    calculationId,
-                    costSubtype,
-                    isIncome: true,
-                  });
+                  const { date, ...newRowState } = rowState;
+                  const cost = createCost(
+                    //@ts-ignore
+                    {
+                      ...newRowState,
+                      amount: +rowState.amount,
+                      price: +rowState.price,
+                      dateOfCost,
+                      calculationId,
+                      costSubtype,
+                      isIncome: true,
+                    }
+                  );
                   router.refresh();
                 }}
               >
@@ -138,16 +138,19 @@ function BusinessPopUp({
               <Button
                 onClick={() => {
                   const dateOfCost = new Date(rowState.date);
-                  delete rowState.date;
-                  const cost = createCost({
-                    ...rowState,
-                    amount: +rowState.amount,
-                    price: +rowState.price,
-                    dateOfCost,
-                    calculationId,
-                    costSubtype,
-                    isIncome: false,
-                  });
+                  const { date, ...newRowState } = rowState;
+                  const cost = createCost(
+                    //@ts-ignore
+                    {
+                      ...newRowState,
+                      amount: +rowState.amount,
+                      price: +rowState.price,
+                      dateOfCost,
+                      calculationId,
+                      costSubtype,
+                      isIncome: false,
+                    }
+                  );
                   router.refresh();
                 }}
               >

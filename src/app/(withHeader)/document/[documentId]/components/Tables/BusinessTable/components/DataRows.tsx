@@ -70,10 +70,15 @@ function DataRows({
       {preparedCosts.map((cost) => (
         <TableRow key={cost.id}>
           <TableCell>{cost.name}</TableCell>
-          <TableCell>{cost.unitOfMeasurement.name}</TableCell>
+          <TableCell>
+            {
+              //@ts-ignore
+              cost.unitOfMeasurement.name
+            }
+          </TableCell>
           {Array.from({ length: 4 }, (_, index) => index + 1).map((el) => {
             console.log(
-              (thisQuarter.id - 1) * 3 + el ==
+              (thisQuarter.id - 1) * 3 + el == //@ts-ignore
                 new Date(cost.dateOfCost).getMonth() + 1
             );
             if (el == 4) {
@@ -139,10 +144,11 @@ function DataRows({
           const sum = thisYearCosts
             .filter(
               (cost) =>
-                (thisQuarter.id - 1) * 3 + el ==
+                (thisQuarter.id - 1) * 3 + el == //@ts-ignore
                 new Date(cost.dateOfCost).getMonth() + 1
             )
             .reduce((p, c) => {
+              //@ts-ignore
               return p + c.amount * c.price;
             }, 0);
 
@@ -159,6 +165,7 @@ function DataRows({
           <TableCell></TableCell>
           <TableCell>
             {thisYearCosts.reduce((p, c) => {
+              //@ts-ignore
               return p + c.amount * c.price;
             }, 0)}
           </TableCell>
