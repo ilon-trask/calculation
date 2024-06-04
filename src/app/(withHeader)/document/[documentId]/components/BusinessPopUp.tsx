@@ -39,7 +39,10 @@ function BusinessPopUp({
   isIncome: boolean;
   costSubtype: string;
 }) {
-  const [rowState, setRowState] = useState<RowStateType>({
+  const [rowState, setRowState] = useState<
+    //ts wanted this
+    Omit<RowStateType, "date"> & { date?: Date | null | string }
+  >({
     name: "",
     amount: "",
     date: "",
@@ -115,9 +118,7 @@ function BusinessPopUp({
             {isIncome ? (
               <Button
                 onClick={() => {
-                  if (rowState.date) {
-                    const dateOfCost = new Date(rowState.date);
-                  }
+                  const dateOfCost = new Date(rowState.date);
                   delete rowState.date;
                   const cost = createCost({
                     ...rowState,
