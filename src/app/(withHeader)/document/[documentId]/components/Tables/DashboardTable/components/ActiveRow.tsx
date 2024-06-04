@@ -132,7 +132,7 @@ function ActiveRow({
         {TABLE_HEADS.map((el) => {
           if (el.name == "Одиниці виміру") {
             return (
-              <TableCell>
+              <TableCell key={el.name}>
                 <UnitOfMeasurementComp
                   serverUserId={serverUserId}
                   key={el.name}
