@@ -20,12 +20,16 @@ type DefectiveActType = Omit<WorkSetType, "section"> & {
 type CalculationType = Omit<CostWithUnit, "note"> & {
   section: "Калькуляція (скорочена)";
 };
+export type BusType = Omit<CostWithUnit, "note" | "type" | "section"> & {
+  section: "Розрахунок бізнес-плану";
+};
 
 export type CostType = Omit<CostWithUnit, "note" | "price"> &
   (
     | WorkSetType
     | CalculationType
     | DefectiveActType
+    | BusType
     | {
         section: "Рахунок фактура";
       }

@@ -44,8 +44,8 @@ model UnitOfMeasurement {
 
 model Cost {
   id                  Int               @id @default(autoincrement())
-  name                String
   type                String?
+  name                String
   amount              Float
   price               Float?
   unitOfMeasurement   UnitOfMeasurement @relation(fields: [unitOfMeasurementId], references: [id])
@@ -56,4 +56,7 @@ model Cost {
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
   unitOfMeasurementId Int
+  isIncome            Boolean?
+  costSubtype         String?
+  dateOfCost          DateTime?
 }

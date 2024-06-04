@@ -18,16 +18,14 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
-  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import DeleteDialog from "@/app/(withHeader)/components/DeleteDialog";
 import { UnitOfMeasurement } from "@prisma/client";
-import CreateUnitOfMeasurement from "./CreateUnitOfMeasurement";
 import { TableHeadsType } from "../../../../page";
+import UnitOfMeasurementComp from "../../../UnitOfMeasurementComp/UnitOfMeasurementComp";
 export const typeArr = [
   { name: "Робота" },
   { name: "Послуга" },
@@ -35,54 +33,6 @@ export const typeArr = [
   { name: "Транспорт" },
   { name: "Не визначино" },
 ] as const;
-function UnitOfMeasurementComp({
-  rowState,
-  setRowState,
-  clearTimeouts,
-  setIsOpen,
-  units,
-}: {
-  rowState: RowType;
-  setRowState: Dispatch<SetStateAction<RowType>>;
-  clearTimeouts: () => void;
-  units: UnitOfMeasurement[];
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-}) {
-  return (
-    <TableCell>
-      <Select
-        value={rowState.unitOfMeasurementId + ""}
-        onValueChange={(e) => {
-          clearTimeouts();
-          setRowState((prev) => ({ ...prev, unitOfMeasurementId: +e }));
-        }}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Одиниці виміру" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>
-              <div
-                className="flex items-center cursor-pointer"
-                onClick={() => setIsOpen(true)}
-              >
-                <Plus className="h-4 w-4" />
-                <span>Додати варіант</span>
-              </div>
-            </SelectLabel>
-            <SelectSeparator />
-            {units.map((el) => (
-              <SelectItem value={el.id + ""} key={el.id}>
-                {el.name}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    </TableCell>
-  );
-}
 
 async function createCostHandler(values: RowType) {
   if (values.id) {
@@ -176,22 +126,27 @@ function ActiveRow({
   ); //@ts-ignore
   const cost = +rowState.amount * +rowState.price || 0;
 
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <>
       <TableRow>
         {TABLE_HEADS.map((el) => {
           if (el.name == "Одиниці виміру") {
             return (
-              <UnitOfMeasurementComp
-                key={el.name}
-                clearTimeouts={clearTimeouts}
-                rowState={rowState}
-                setIsOpen={setIsOpen}
-                setRowState={setRowState}
-                units={units}
-              />
+              <TableCell>
+                <UnitOfMeasurementComp
+                  serverUserId={serverUserId}
+                  key={el.name}
+                  onValueChange={(e) => {
+                    clearTimeouts();
+                    setRowState((prev) => ({
+                      ...prev,
+                      unitOfMeasurementId: +e,
+                    }));
+                  }}
+                  unitOfMeasurementId={rowState.unitOfMeasurementId}
+                  units={units}
+                />
+              </TableCell>
             );
           }
           if (el.label == "name")
@@ -320,11 +275,6 @@ function ActiveRow({
           )}
         </TableCell>
       </TableRow>
-      <CreateUnitOfMeasurement
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        serverUserId={serverUserId}
-      />
     </>
   );
 }

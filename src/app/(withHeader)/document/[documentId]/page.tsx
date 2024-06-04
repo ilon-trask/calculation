@@ -9,6 +9,7 @@ import { UnitOfMeasurement } from "@prisma/client";
 import WorkSetTable from "./components/Tables/DashboardTable/DashboardTable";
 import getUser from "@/app/hooks/getUser";
 import DocumentTitle from "./components/DocumentTitle";
+import BusinessTable from "./components/Tables/BusinessTable/BusinessTable";
 
 //дефектний акт
 //набір робіт
@@ -89,6 +90,17 @@ function Table({
         units={units}
         serverUserId={userId!}
         TABLE_HEADS={SET_WORK_TABLE_HEADS}
+      />
+    );
+  }
+
+  if (calculation.section == "Розрахунок бізнес-плану") {
+    return (
+      <BusinessTable
+        units={units}
+        serverUserId={userId!}
+        calculationId={calculation.id}
+        costs={calculation.costs}
       />
     );
   }

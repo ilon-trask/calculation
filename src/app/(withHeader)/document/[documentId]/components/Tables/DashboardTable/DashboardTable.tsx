@@ -35,6 +35,7 @@ type SetType = partRow & {
   section: "Набір робіт, матеріалів та послуг";
   note: string;
 };
+
 export type RowType = partRow | CalcType | AktType | SetType;
 
 export const typeArr = [
@@ -46,6 +47,7 @@ export const typeArr = [
 ] as const;
 
 export type TypesOfType = (typeof typeArr)[number]["name"];
+
 function Row({
   data,
   setData,
@@ -83,10 +85,12 @@ function Row({
     />
   );
 }
+
 function checkIsCalc(data: RowType[]): data is CalcType[] {
   if (data[0]?.section == "Калькуляція (скорочена)") return true;
   return false;
 }
+
 function WorkSetTable({
   className,
   isOwner,
