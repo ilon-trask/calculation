@@ -15,8 +15,10 @@ import { Button } from "@/components/ui/button";
 import { UnitOfMeasurement } from "@prisma/client";
 import { createCost } from "@/app/data/Cost.actions";
 import { useRouter } from "next/navigation";
+import BusinessNameComp from "./BusinessNameComp/BusinessNameComp";
+import { busTableType } from "./Tables/BusinessTable/components/DataRows";
 
-type RowStateType = {
+export type RowStateType = {
   name: string;
   unitOfMeasurementId: number;
   amount: string | number;
@@ -31,6 +33,7 @@ function BusinessPopUp({
   calculationId,
   isIncome,
   costSubtype,
+  costs,
 }: {
   children: JSX.Element;
   units: UnitOfMeasurement[];
@@ -38,6 +41,7 @@ function BusinessPopUp({
   calculationId: number;
   isIncome: boolean;
   costSubtype: string;
+  costs: busTableType[];
 }) {
   const [rowState, setRowState] = useState<RowStateType>({
     name: "",
@@ -47,6 +51,7 @@ function BusinessPopUp({
     unitOfMeasurementId: 0,
   });
   const router = useRouter();
+
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
@@ -56,11 +61,22 @@ function BusinessPopUp({
           <div>
             <div>
               Назва показника
-              <Input
+              {/* <Input
                 value={rowState.name}
                 onChange={(e) =>
                   setRowState((prev) => ({ ...prev, name: e.target.value }))
                 }
+              /> */}
+              <BusinessNameComp
+                units={costs}
+                unitOfMeasurementId={rowState.name}
+                setRowState={setRowState}
+                onValueChange={(e) => {
+                  setRowState((prev) => ({
+                    ...prev,
+                    name: e,
+                  }));
+                }}
               />
             </div>
             <div>
@@ -98,13 +114,24 @@ function BusinessPopUp({
               />
             </div>
             <div>
-              Період
+              Період оплати
               <Input
                 type="month"
                 value={rowState.date}
                 onChange={(e) => {
                   console.log(e.target.value);
                   setRowState((prev) => ({ ...prev, date: e.target.value }));
+                }}
+              />
+            </div>
+            <div>
+              Період виникнення
+              <Input
+                type="month"
+                value={rowState.date}
+                onChange={(e) => {
+                  // console.log(e.target.value);
+                  // setRowState((prev) => ({ ...prev, date: e.target.value }));
                 }}
               />
             </div>

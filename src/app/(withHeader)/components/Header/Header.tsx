@@ -1,14 +1,14 @@
 import supabaseServer from "@/lib/supabaseServer";
 import CheckIsUser from "./components/CheckIsUser";
+import HeaderWrap from "./HeaderWrap";
 
 async function Header() {
   const { data } = await supabaseServer.auth.getSession();
 
   return (
-    <div className="flex justify-between h-16 items-center mb-3 print:hidden">
-      <p className="font-semibold text-2xl">Logo</p>
+    <HeaderWrap>
       <CheckIsUser user={data.session?.user} />
-    </div>
+    </HeaderWrap>
   );
 }
 

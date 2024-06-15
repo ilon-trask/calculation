@@ -6,7 +6,7 @@ import { PlusSquare } from "lucide-react";
 import { UnitOfMeasurement } from "@prisma/client";
 type ValueType = { dateOfCost: Date; price: number; amount: number };
 
-type busTableType = Omit<BusType, "amount" | "price" | "dateOfCost"> & {
+export type busTableType = Omit<BusType, "amount" | "price" | "dateOfCost"> & {
   values: ValueType[];
 };
 function DataRows({
@@ -93,7 +93,7 @@ function DataRows({
                   <TableCell>
                     {Math.round((yearSum / yearAmount) * 100) / 100}
                   </TableCell>
-                  <TableCell>{yearSum}</TableCell>
+                  <TableCell className="bg-slate-100">{yearSum}</TableCell>
                 </React.Fragment>
               );
             }
@@ -107,7 +107,9 @@ function DataRows({
                 <React.Fragment key={el}>
                   <TableCell>{costData.amount}</TableCell>
                   <TableCell>{costData.price}</TableCell>
-                  <TableCell>{costData.amount * costData.price!}</TableCell>
+                  <TableCell className="bg-slate-100">
+                    {costData.amount * costData.price!}
+                  </TableCell>
                 </React.Fragment>
               );
             } else {
@@ -131,6 +133,7 @@ function DataRows({
               calculationId={calculationId}
               isIncome={isIncome}
               costSubtype={costSubtype}
+              costs={preparedCosts}
             >
               <PlusSquare />
             </BusinessPopUp>
@@ -154,16 +157,16 @@ function DataRows({
 
           return (
             <React.Fragment key={el}>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell>{sum}</TableCell>
+              <TableCell className="bg-slate-100"></TableCell>
+              <TableCell className="bg-slate-100"></TableCell>
+              <TableCell className="bg-slate-100">{sum}</TableCell>
             </React.Fragment>
           );
         })}
         <React.Fragment>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell>
+          <TableCell className="bg-slate-100"></TableCell>
+          <TableCell className="bg-slate-100"></TableCell>
+          <TableCell className="bg-slate-100">
             {thisYearCosts.reduce((p, c) => {
               //@ts-ignore
               return p + c.amount * c.price;
