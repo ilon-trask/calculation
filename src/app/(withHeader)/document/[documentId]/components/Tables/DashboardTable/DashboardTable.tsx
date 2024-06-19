@@ -86,8 +86,12 @@ function Row({
   );
 }
 
-function checkIsCalc(data: RowType[]): data is CalcType[] {
-  if (data[0]?.section == "Калькуляція (скорочена)") return true;
+function checkIsCalcOrInvoice(data: RowType[]): data is CalcType[] {
+  if (
+    data[0]?.section == "Калькуляція (скорочена)" ||
+    data[0]?.section == "Рахунок фактура"
+  )
+    return true;
   return false;
 }
 
@@ -198,7 +202,7 @@ function WorkSetTable({
             ) : null}
           </TableCell>
           <TableCell colSpan={TABLE_HEADS.length - 2} />
-          {checkIsCalc(displayedData) && (
+          {checkIsCalcOrInvoice(displayedData) && (
             <TableCell className="text-right">
               Всього:
               {displayedData.reduce((p, c) => {

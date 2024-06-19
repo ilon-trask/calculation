@@ -37,6 +37,18 @@ const CALCULATION_TABLE_HEADS = [
   { name: "Сума", isNumber: true, label: "sum" },
 ];
 
+const INVOICE_TABLE_HEADS = [
+  { name: "Назва", isNumber: false, label: "name" },
+  {
+    name: "Одиниці виміру",
+    isNumber: false,
+    label: "unitOfMeasurementId",
+  },
+  { name: "Ціна", isNumber: true, label: "price" },
+  { name: "Кількість", isNumber: true, label: "amount" },
+  { name: "Сума", isNumber: true, label: "sum" },
+];
+
 export type TableHeadsType = typeof SET_WORK_TABLE_HEADS;
 
 function Table({
@@ -90,6 +102,20 @@ function Table({
         units={units}
         serverUserId={userId!}
         TABLE_HEADS={SET_WORK_TABLE_HEADS}
+      />
+    );
+  }
+  if (calculation.section == "Рахунок фактура") {
+    return (
+      <WorkSetTable
+        className="mt-10"
+        calculationId={calculation.id}
+        section={calculation.section}
+        costs={calculation.costs}
+        isOwner={isOwner}
+        units={units}
+        serverUserId={userId!}
+        TABLE_HEADS={INVOICE_TABLE_HEADS}
       />
     );
   }

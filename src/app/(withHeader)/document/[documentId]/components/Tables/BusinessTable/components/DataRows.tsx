@@ -2,13 +2,17 @@ import { BusType } from "@/app/data/Cost.actions";
 import { TableCell, TableRow } from "@/components/ui/table";
 import React, { useEffect, useState } from "react";
 import BusinessPopUp from "../../../BusinessPopUp";
-import { PlusSquare } from "lucide-react";
+import { PlusSquare, HelpCircle } from "lucide-react";
 import { UnitOfMeasurement } from "@prisma/client";
+import Text from "@/components/ui/Text";
+import { Tooltip } from "@/components/ui/tooltip";
+import BusinessPlanHelpAlert from "../../../BusinessPlanHelpAlert";
 type ValueType = { dateOfCost: Date; price: number; amount: number };
 
 export type busTableType = Omit<BusType, "amount" | "price" | "dateOfCost"> & {
   values: ValueType[];
 };
+
 function DataRows({
   thisYearCosts,
   thisQuarter,
@@ -124,25 +128,28 @@ function DataRows({
           })}
         </TableRow>
       ))}
-      {isPlus ? (
-        <TableRow>
-          <TableCell className="cursor-pointer">
-            <BusinessPopUp
-              units={units}
-              serverUserId={serverUserId}
-              calculationId={calculationId}
-              isIncome={isIncome}
-              costSubtype={costSubtype}
-              costs={preparedCosts}
-            >
-              <PlusSquare />
-            </BusinessPopUp>
-          </TableCell>
-        </TableRow>
-      ) : null}
+
       <TableRow>
+        <TableCell>
+          <div className="flex items-center justify-between">
+            {isPlus ? (
+              <BusinessPopUp
+                units={units}
+                serverUserId={serverUserId}
+                calculationId={calculationId}
+                isIncome={isIncome}
+                costSubtype={costSubtype}
+                costs={preparedCosts}
+              >
+                <PlusSquare className="cursor-pointer" />
+              </BusinessPopUp>
+            ) : null}
+            <BusinessPlanHelpAlert>
+              <HelpCircle className="cursor-pointer" />
+            </BusinessPlanHelpAlert>
+          </div>
+        </TableCell>
         <TableCell className="text-right">Всього</TableCell>
-        <TableCell className="text-right"></TableCell>
         {Array.from({ length: 3 }, (_, index) => index + 1).map((el) => {
           const sum = thisYearCosts
             .filter(

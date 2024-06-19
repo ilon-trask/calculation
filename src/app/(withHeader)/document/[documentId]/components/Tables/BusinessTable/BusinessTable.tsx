@@ -8,11 +8,9 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { PlusSquare } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
-import BusinessPopUp from "../../BusinessPopUp";
 import { UnitOfMeasurement } from "@prisma/client";
-import { BusType, CostType } from "@/app/data/Cost.actions";
+import { BusType } from "@/app/data/Cost.actions";
 import {
   Popover,
   PopoverContent,
@@ -43,15 +41,23 @@ function BusinessTable({
   costs: BusType[];
 }) {
   const [quarter, setQuarter] = useState<quarterType>("1 квартал");
-  const thisQuarter = useMemo(
-    () => quarters.find((el) => el.name == quarter),
-    [quarter]
+  const [thisQuarter, setThisQuarter] = useState(
+    quarters.find((el) => el.name == quarter)
   );
+  useEffect(() => {
+    setThisQuarter(quarters.find((el) => el.name == quarter));
+  }, [quarter]);
   const [value, setValue] = useState(new Date().getFullYear());
   const [thisYearCosts, setThisYearCosts] = useState(
     //@ts-ignore
     costs.filter((el) => new Date(el.dateOfCost).getFullYear() == value)
   );
+  useEffect(() => {
+    setThisYearCosts(
+      //@ts-ignore
+      costs.filter((el) => new Date(el.dateOfCost).getFullYear() == value)
+    );
+  }, [costs]);
   const thisYear = useMemo(() => {
     setThisYearCosts(
       //@ts-ignore
@@ -137,13 +143,16 @@ function BusinessTable({
             <TableCell className="uppercase">Маркетинг</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Номенклатура</TableCell>
+            <TableCell>Продукція, послуга</TableCell>
           </TableRow>
           <DataRows
             calculationId={calculationId}
             serverUserId={serverUserId}
             thisQuarter={thisQuarter}
-            thisYearCosts={thisYearCosts.filter((el) => el.isIncome)}
+            thisYearCosts={thisYearCosts.filter(
+              (el) =>
+                el.isIncome && (el.costSubtype == null || el.costSubtype == "")
+            )}
             units={units}
             costSubtype=""
             isPlus
@@ -164,6 +173,21 @@ function BusinessTable({
             )}
             units={units}
             costSubtype="витрати постійні"
+            isPlus
+            isIncome={false}
+          />
+          <TableRow>
+            <TableCell>Амортизація</TableCell>
+          </TableRow>
+          <DataRows
+            calculationId={calculationId}
+            serverUserId={serverUserId}
+            thisQuarter={thisQuarter}
+            thisYearCosts={thisYearCosts.filter(
+              (el) => !el.isIncome && el.costSubtype == "амортизація"
+            )}
+            units={units}
+            costSubtype="амортизація"
             isPlus
             isIncome={false}
           />
@@ -225,7 +249,8 @@ function BusinessTable({
                         i ==
                           //@ts-ignore
                           new Date(cost.dateOfCost).getMonth() + 1 &&
-                        !cost.isIncome
+                        !cost.isIncome &&
+                        cost.costSubtype != "амортизація"
                     )
                     .reduce((p, c) => {
                       //@ts-ignore
@@ -276,12 +301,18 @@ function BusinessTable({
             calculationId={calculationId}
             serverUserId={serverUserId}
             thisQuarter={thisQuarter}
-            thisYearCosts={thisYearCosts.filter((el) => !el.isIncome)}
+            thisYearCosts={thisYearCosts.filter(
+              (el) => !el.isIncome && el.costSubtype != "амортизація"
+            )}
             units={units}
             costSubtype=""
             isPlus={false}
             isIncome={false}
           />
+          <TableRow>
+            <TableCell>Результат за період</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
           <TableRow>
             <TableCell>Залишок на кінець</TableCell>
             <TableCell></TableCell>
@@ -308,7 +339,8 @@ function BusinessTable({
                       (cost) =>
                         i == //@ts-ignore
                           new Date(cost.dateOfCost).getMonth() + 1 &&
-                        !cost.isIncome
+                        !cost.isIncome &&
+                        cost.costSubtype != "амортизація"
                     )
                     .reduce((p, c) => {
                       //@ts-ignore
@@ -344,13 +376,49 @@ function BusinessTable({
                   return p + c.amount * c.price;
                 }, 0) -
                 thisYearCosts
-                  .filter((cost) => !cost.isIncome)
+                  .filter(
+                    (cost) =>
+                      !cost.isIncome && cost.costSubtype != "амортизація"
+                  )
                   .reduce((p, c) => {
                     //@ts-ignore
                     return p + c.amount * c.price;
                   }, 0)}
             </TableCell>
           </TableRow>
+          <TableRow>
+            <TableCell className="uppercase">ІНВЕСТИЦІЇ</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Власні</TableCell>
+          </TableRow>
+          <DataRows
+            calculationId={calculationId}
+            serverUserId={serverUserId}
+            thisQuarter={thisQuarter}
+            thisYearCosts={thisYearCosts.filter(
+              (el) => el.isIncome && el.costSubtype == "власні"
+            )}
+            units={units}
+            costSubtype="власні"
+            isPlus
+            isIncome
+          />
+          <TableRow>
+            <TableCell>Залучені позики</TableCell>
+          </TableRow>
+          <DataRows
+            calculationId={calculationId}
+            serverUserId={serverUserId}
+            thisQuarter={thisQuarter}
+            thisYearCosts={thisYearCosts.filter(
+              (el) => el.isIncome && el.costSubtype == "залучені позики"
+            )}
+            units={units}
+            costSubtype="залучені позики"
+            isPlus
+            isIncome
+          />
         </TableBody>
       </Table>
     </>
