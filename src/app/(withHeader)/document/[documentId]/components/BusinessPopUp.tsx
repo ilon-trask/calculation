@@ -24,6 +24,7 @@ export type RowStateType = {
   amount: string | number;
   price: string | number;
   date: string;
+  dateOfOccurrence: string;
 };
 
 function BusinessPopUp({
@@ -145,6 +146,7 @@ function BusinessPopUp({
               <Button
                 onClick={() => {
                   const dateOfCost = new Date(rowState.date);
+                  //@ts-ignore
                   const dateOfOccurrence = new Date(rowState.dateOfOccurrence);
                   const { date, ...newRowState } = rowState;
                   const cost = createCost(
