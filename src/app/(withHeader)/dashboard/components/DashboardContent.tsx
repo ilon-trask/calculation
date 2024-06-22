@@ -69,13 +69,16 @@ function DashboardContent({
             </React.Fragment>
           );
       })}
-      {/* <CreateDocument
+      <CreateDocument
         serverUserId={userId!}
         section={section!}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         chosenCalc={calculations.find((el) => el.id == chosenCalcId)}
-      /> */}
+      >
+        {/* не видаляти */}
+        {1}
+      </CreateDocument>
       <NonAuthUserDialog isOpen={isUser} setIsOpen={setIsUser} />
     </>
   );

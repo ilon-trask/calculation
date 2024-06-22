@@ -49,6 +49,7 @@ function BusinessPopUp({
     date: "",
     price: "",
     unitOfMeasurementId: 0,
+    dateOfOccurrence: "",
   });
   const router = useRouter();
 
@@ -119,7 +120,6 @@ function BusinessPopUp({
                 type="month"
                 value={rowState.date}
                 onChange={(e) => {
-                  console.log(e.target.value);
                   setRowState((prev) => ({ ...prev, date: e.target.value }));
                 }}
               />
@@ -128,10 +128,12 @@ function BusinessPopUp({
               Період виникнення
               <Input
                 type="month"
-                value={rowState.date}
+                value={rowState.dateOfOccurrence}
                 onChange={(e) => {
-                  // console.log(e.target.value);
-                  // setRowState((prev) => ({ ...prev, date: e.target.value }));
+                  setRowState((prev) => ({
+                    ...prev,
+                    dateOfOccurrence: e.target.value,
+                  }));
                 }}
               />
             </div>
@@ -143,6 +145,7 @@ function BusinessPopUp({
               <Button
                 onClick={() => {
                   const dateOfCost = new Date(rowState.date);
+                  const dateOfOccurrence = new Date(rowState.dateOfOccurrence);
                   const { date, ...newRowState } = rowState;
                   const cost = createCost(
                     //@ts-ignore
@@ -151,6 +154,7 @@ function BusinessPopUp({
                       amount: +rowState.amount,
                       price: +rowState.price,
                       dateOfCost,
+                      dateOfOccurrence,
                       calculationId,
                       costSubtype,
                       isIncome: true,
@@ -165,6 +169,8 @@ function BusinessPopUp({
               <Button
                 onClick={() => {
                   const dateOfCost = new Date(rowState.date);
+                  //@ts-ignore
+                  const dateOfOccurrence = new Date(rowState.dateOfOccurrence);
                   const { date, ...newRowState } = rowState;
                   const cost = createCost(
                     //@ts-ignore
@@ -172,6 +178,7 @@ function BusinessPopUp({
                       ...newRowState,
                       amount: +rowState.amount,
                       price: +rowState.price,
+                      dateOfOccurrence,
                       dateOfCost,
                       calculationId,
                       costSubtype,

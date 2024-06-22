@@ -51,7 +51,7 @@ model Cost {
   unitOfMeasurement   UnitOfMeasurement @relation(fields: [unitOfMeasurementId], references: [id])
   note                String?
   section             String?
-  calculation         Calculation       @relation(fields: [calculationId], references: [id])
+  calculation         Calculation       @relation(fields: [calculationId], references: [id], onDelete: Cascade)
   calculationId       Int
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
@@ -59,4 +59,5 @@ model Cost {
   isIncome            Boolean?
   costSubtype         String?
   dateOfCost          DateTime?
+  dateOfOccurrence    DateTime?
 }

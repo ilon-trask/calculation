@@ -2,16 +2,28 @@ import { BusType } from "@/app/data/Cost.actions";
 import { TableCell, TableRow } from "@/components/ui/table";
 import React, { useEffect, useState } from "react";
 import BusinessPopUp from "../../../BusinessPopUp";
-import { PlusSquare, HelpCircle } from "lucide-react";
+import { PlusSquare, HelpCircle, PenSquare } from "lucide-react";
 import { UnitOfMeasurement } from "@prisma/client";
-import Text from "@/components/ui/Text";
-import { Tooltip } from "@/components/ui/tooltip";
 import BusinessPlanHelpAlert from "../../../BusinessPlanHelpAlert";
-type ValueType = { dateOfCost: Date; price: number; amount: number };
+
+type ValueType = {
+  dateOfCost: Date;
+  price: number;
+  amount: number;
+  dateOfOccurrence: Date;
+};
 
 export type busTableType = Omit<BusType, "amount" | "price" | "dateOfCost"> & {
   values: ValueType[];
 };
+
+function choseDate(isOccurrence: boolean, cost: busTableType) {
+  if (isOccurrence) {
+    return cost.dateOfOccurrence;
+  }
+  //@ts-ignore
+  return cost.dateOfCost;
+}
 
 function DataRows({
   thisYearCosts,
@@ -22,6 +34,7 @@ function DataRows({
   isPlus,
   isIncome,
   costSubtype,
+  isOccurrence,
 }: {
   thisYearCosts: BusType[];
   thisQuarter: any;
@@ -31,6 +44,7 @@ function DataRows({
   isPlus: boolean;
   isIncome: boolean;
   costSubtype: string;
+  isOccurrence: boolean;
 }) {
   const [preparedCosts, setPreparedCosts] = useState<busTableType[]>([]);
 
@@ -44,7 +58,12 @@ function DataRows({
       let insideRes = {
         ...el,
         values: [
-          { dateOfCost: el.dateOfCost!, amount: el.amount, price: el.price! },
+          {
+            dateOfCost: el.dateOfCost!,
+            amount: el.amount,
+            price: el.price!,
+            dateOfOccurrence: el.dateOfOccurrence!,
+          },
         ],
       };
 
@@ -58,6 +77,7 @@ function DataRows({
             amount: insideEl.amount,
             dateOfCost: insideEl.dateOfCost!,
             price: insideEl.price!,
+            dateOfOccurrence: el.dateOfOccurrence!,
           });
           costsArr.splice(j, 1);
           j--;
@@ -73,7 +93,12 @@ function DataRows({
     <>
       {preparedCosts.map((cost) => (
         <TableRow key={cost.id}>
-          <TableCell>{cost.name}</TableCell>
+          <TableCell>
+            <div className="flex items-center">
+              <PenSquare className="cursor-pointer" />
+              {cost.name}
+            </div>
+          </TableCell>
           <TableCell>
             {
               //@ts-ignore
@@ -82,8 +107,8 @@ function DataRows({
           </TableCell>
           {Array.from({ length: 4 }, (_, index) => index + 1).map((el) => {
             console.log(
-              (thisQuarter.id - 1) * 3 + el == //@ts-ignore
-                new Date(cost.dateOfCost).getMonth() + 1
+              (thisQuarter.id - 1) * 3 + el ==
+                new Date(choseDate(isOccurrence, cost)).getMonth() + 1
             );
             if (el == 4) {
               const yearSum = cost.values.reduce(
@@ -103,7 +128,7 @@ function DataRows({
             }
             const costData = cost.values.find(
               (value) =>
-                new Date(value.dateOfCost).getMonth() + 1 ==
+                new Date(choseDate(isOccurrence, cost)).getMonth() + 1 ==
                 (thisQuarter.id - 1) * 3 + el
             );
             if (costData) {
@@ -155,7 +180,7 @@ function DataRows({
             .filter(
               (cost) =>
                 (thisQuarter.id - 1) * 3 + el == //@ts-ignore
-                new Date(cost.dateOfCost).getMonth() + 1
+                new Date(choseDate(isOccurrence, cost)).getMonth() + 1
             )
             .reduce((p, c) => {
               //@ts-ignore

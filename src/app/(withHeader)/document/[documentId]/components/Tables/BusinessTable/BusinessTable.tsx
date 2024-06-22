@@ -140,7 +140,9 @@ function BusinessTable({
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell className="uppercase">Маркетинг</TableCell>
+            <TableCell className="uppercase font-semibold">
+              Доходи <span className="lowercase">(Оплата)</span>
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Продукція, послуга</TableCell>
@@ -157,9 +159,42 @@ function BusinessTable({
             costSubtype=""
             isPlus
             isIncome
+            isOccurrence={false}
           />
           <TableRow>
-            <TableCell className="uppercase">Витрати</TableCell>
+            <TableCell>Власні інвестиції</TableCell>
+          </TableRow>
+          <DataRows
+            calculationId={calculationId}
+            serverUserId={serverUserId}
+            thisQuarter={thisQuarter}
+            thisYearCosts={thisYearCosts.filter(
+              (el) => el.isIncome && el.costSubtype == "власні"
+            )}
+            units={units}
+            costSubtype="власні"
+            isPlus
+            isIncome
+            isOccurrence={false}
+          />
+          <TableRow>
+            <TableCell>Залучені позики</TableCell>
+          </TableRow>
+          <DataRows
+            calculationId={calculationId}
+            serverUserId={serverUserId}
+            thisQuarter={thisQuarter}
+            thisYearCosts={thisYearCosts.filter(
+              (el) => el.isIncome && el.costSubtype == "залучені позики"
+            )}
+            units={units}
+            costSubtype="залучені позики"
+            isPlus
+            isIncome
+            isOccurrence={false}
+          />
+          <TableRow>
+            <TableCell className="uppercase font-semibold">Витрати</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Витрати постійні</TableCell>
@@ -175,6 +210,7 @@ function BusinessTable({
             costSubtype="витрати постійні"
             isPlus
             isIncome={false}
+            isOccurrence={false}
           />
           <TableRow>
             <TableCell>Амортизація</TableCell>
@@ -190,6 +226,7 @@ function BusinessTable({
             costSubtype="амортизація"
             isPlus
             isIncome={false}
+            isOccurrence={false}
           />
           <TableRow>
             <TableCell>Витрати заг-вир</TableCell>
@@ -205,6 +242,7 @@ function BusinessTable({
             costSubtype="витрати заг-вир"
             isPlus
             isIncome={false}
+            isOccurrence={false}
           />
           <TableRow>
             <TableCell>Витрати прямі</TableCell>
@@ -220,9 +258,12 @@ function BusinessTable({
             costSubtype="витрати прямі"
             isPlus
             isIncome={false}
+            isOccurrence={false}
           />
           <TableRow>
-            <TableCell className="uppercase">Рух грошовиї коштів</TableCell>
+            <TableCell className="uppercase font-semibold">
+              Рух коштів
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Залишок на початок</TableCell> <TableCell></TableCell>
@@ -280,7 +321,6 @@ function BusinessTable({
             <TableCell></TableCell>
             <TableCell>0</TableCell>
           </TableRow>
-
           <TableRow>
             <TableCell>Притік Надходження</TableCell>
           </TableRow>
@@ -293,6 +333,7 @@ function BusinessTable({
             costSubtype=""
             isPlus={false}
             isIncome
+            isOccurrence={false}
           />
           <TableRow>
             <TableCell>Відтік Виплати</TableCell>
@@ -308,10 +349,59 @@ function BusinessTable({
             costSubtype=""
             isPlus={false}
             isIncome={false}
+            isOccurrence={false}
           />
           <TableRow>
             <TableCell>Результат за період</TableCell>
             <TableCell></TableCell>
+            {(() => {
+              const arr: number[] = [];
+              for (let i = 0; i < 12; i++) {
+                const sum =
+                  thisYearCosts
+                    .filter(
+                      (cost) =>
+                        i ==
+                          //@ts-ignore
+                          new Date(cost.dateOfCost).getMonth() + 1 &&
+                        cost.isIncome
+                    )
+                    .reduce((p, c) => {
+                      //@ts-ignore
+                      return p + c.amount * c.price;
+                    }, 0) -
+                  thisYearCosts
+                    .filter(
+                      (cost) =>
+                        i == //@ts-ignore
+                          new Date(cost.dateOfCost).getMonth() + 1 &&
+                        !cost.isIncome &&
+                        cost.costSubtype != "амортизація"
+                    )
+                    .reduce((p, c) => {
+                      //@ts-ignore
+                      return p + c.amount * c.price;
+                    }, 0);
+
+                arr[i] = sum;
+              }
+              return Array.from({ length: 3 }, (_, index) => index + 1).map(
+                (el) => {
+                  return (
+                    <React.Fragment key={el}>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>
+                        {
+                          //@ts-ignore
+                          arr[(thisQuarter.id - 1) * 3 + el]
+                        }
+                      </TableCell>
+                    </React.Fragment>
+                  );
+                }
+              );
+            })()}
           </TableRow>
           <TableRow>
             <TableCell>Залишок на кінець</TableCell>
@@ -387,38 +477,224 @@ function BusinessTable({
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell className="uppercase">ІНВЕСТИЦІЇ</TableCell>
+            <TableCell className="uppercase font-semibold">
+              Доходи <span className="lowercase">(виникнення)</span>
+            </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Власні</TableCell>
+            <TableCell>Продукція, послуга</TableCell>
           </TableRow>
           <DataRows
             calculationId={calculationId}
             serverUserId={serverUserId}
             thisQuarter={thisQuarter}
             thisYearCosts={thisYearCosts.filter(
-              (el) => el.isIncome && el.costSubtype == "власні"
+              (el) =>
+                el.isIncome && (el.costSubtype == null || el.costSubtype == "")
             )}
             units={units}
-            costSubtype="власні"
+            costSubtype=""
             isPlus
             isIncome
+            isOccurrence
           />
           <TableRow>
-            <TableCell>Залучені позики</TableCell>
+            <TableCell className="uppercase font-semibold">Витрати</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Витрати постійні</TableCell>
           </TableRow>
           <DataRows
             calculationId={calculationId}
             serverUserId={serverUserId}
             thisQuarter={thisQuarter}
             thisYearCosts={thisYearCosts.filter(
-              (el) => el.isIncome && el.costSubtype == "залучені позики"
+              (el) => !el.isIncome && el.costSubtype == "витрати постійні"
             )}
             units={units}
-            costSubtype="залучені позики"
+            costSubtype="витрати постійні"
             isPlus
-            isIncome
+            isIncome={false}
+            isOccurrence
           />
+          <TableRow>
+            <TableCell>Амортизація</TableCell>
+          </TableRow>
+          <DataRows
+            calculationId={calculationId}
+            serverUserId={serverUserId}
+            thisQuarter={thisQuarter}
+            thisYearCosts={thisYearCosts.filter(
+              (el) => !el.isIncome && el.costSubtype == "амортизація"
+            )}
+            units={units}
+            costSubtype="амортизація"
+            isPlus
+            isIncome={false}
+            isOccurrence
+          />
+          <TableRow>
+            <TableCell>Витрати заг-вир</TableCell>
+          </TableRow>
+          <DataRows
+            calculationId={calculationId}
+            serverUserId={serverUserId}
+            thisQuarter={thisQuarter}
+            thisYearCosts={thisYearCosts.filter(
+              (el) => !el.isIncome && el.costSubtype == "витрати заг-вир"
+            )}
+            units={units}
+            costSubtype="витрати заг-вир"
+            isPlus
+            isIncome={false}
+            isOccurrence
+          />
+          <TableRow>
+            <TableCell>Витрати прямі</TableCell>
+          </TableRow>
+          <DataRows
+            calculationId={calculationId}
+            serverUserId={serverUserId}
+            thisQuarter={thisQuarter}
+            thisYearCosts={thisYearCosts.filter(
+              (el) => !el.isIncome && el.costSubtype == "витрати прямі"
+            )}
+            units={units}
+            costSubtype="витрати прямі"
+            isPlus
+            isIncome={false}
+            isOccurrence
+          />
+          <TableRow>
+            <TableCell className="uppercase font-semibold">Прибуток</TableCell>
+          </TableRow>
+          <TableRow></TableRow>
+          <TableRow>
+            <TableCell>Прибуток за період</TableCell> <TableCell></TableCell>
+            {(() => {
+              const arr: number[] = [0];
+              for (let i = 0; i < 12; i++) {
+                const sum =
+                  thisYearCosts
+                    .filter(
+                      (cost) =>
+                        i == //@ts-ignore
+                          new Date(cost.dateOfOccurrence).getMonth() &&
+                        cost.isIncome
+                    )
+                    .reduce((p, c) => {
+                      //@ts-ignore
+                      return p + c.amount * c.price;
+                    }, 0) -
+                  thisYearCosts
+                    .filter(
+                      (cost) =>
+                        i ==
+                          //@ts-ignore
+                          new Date(cost.dateOfOccurrence).getMonth() &&
+                        !cost.isIncome
+                    )
+                    .reduce((p, c) => {
+                      //@ts-ignore
+                      return p + c.amount * c.price;
+                    }, 0);
+
+                arr.push(sum);
+              }
+              return (
+                <>
+                  {Array.from({ length: 3 }, (_, index) => index + 1).map(
+                    (el) => {
+                      return (
+                        <React.Fragment key={el}>
+                          <TableCell></TableCell>
+                          <TableCell></TableCell>
+                          <TableCell>
+                            {
+                              //@ts-ignore
+                              arr[(thisQuarter.id - 1) * 3 + el]
+                            }
+                          </TableCell>
+                        </React.Fragment>
+                      );
+                    }
+                  )}
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell>{arr.reduce((p, c) => p + c, 0)}</TableCell>
+                </>
+              );
+            })()}
+          </TableRow>
+          <TableRow>
+            <TableCell>Прибуток (наростаючий)</TableCell>
+            <TableCell></TableCell>
+            {(() => {
+              let prevMonth = 0;
+              const arr: number[] = [0];
+              for (let i = 0; i < 12; i++) {
+                const sum =
+                  prevMonth +
+                  thisYearCosts
+                    .filter(
+                      (cost) =>
+                        i == //@ts-ignore
+                          new Date(cost.dateOfOccurrence).getMonth() &&
+                        cost.isIncome
+                    )
+                    .reduce((p, c) => {
+                      //@ts-ignore
+                      return p + c.amount * c.price;
+                    }, 0) -
+                  thisYearCosts
+                    .filter(
+                      (cost) =>
+                        i ==
+                          //@ts-ignore
+                          new Date(cost.dateOfOccurrence).getMonth() &&
+                        !cost.isIncome
+                    )
+                    .reduce((p, c) => {
+                      //@ts-ignore
+                      return p + c.amount * c.price;
+                    }, 0);
+                prevMonth = sum;
+                arr.push(sum);
+              }
+              return (
+                <React.Fragment>
+                  {Array.from({ length: 3 }, (_, index) => index + 1).map(
+                    (el) => {
+                      return (
+                        <React.Fragment key={el}>
+                          <TableCell></TableCell>
+                          <TableCell></TableCell>
+                          <TableCell>
+                            {
+                              //@ts-ignore
+                              arr[(thisQuarter.id - 1) * 3 + el]
+                            }
+                          </TableCell>
+                        </React.Fragment>
+                      );
+                    }
+                  )}
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell>{arr[arr.length - 1]}</TableCell>
+                </React.Fragment>
+              );
+            })()}
+          </TableRow>
+          <TableRow>
+            <TableCell> </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell> </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell> </TableCell>
+          </TableRow>{" "}
         </TableBody>
       </Table>
     </>
