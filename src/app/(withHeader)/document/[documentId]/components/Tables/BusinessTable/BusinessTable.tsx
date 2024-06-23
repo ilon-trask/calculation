@@ -105,7 +105,7 @@ function BusinessTable({
       {quarters.map((el) => (
         <Button
           key={el.name}
-          variant={"outline"}
+          variant={quarter == el.name ? "default" : "outline"}
           onClick={() => {
             setQuarter(el.name);
           }}
@@ -139,6 +139,14 @@ function BusinessTable({
           </TableRow>
         </TableHeader>
         <TableBody>
+          <TableRow className="bg-black  hover:bg-black">
+            <TableCell
+              colSpan={120}
+              className="text-center text-white uppercase hover:bg-black"
+            >
+              Розрахунок грошового потоку
+            </TableCell>
+          </TableRow>
           <TableRow>
             <TableCell className="uppercase font-semibold">
               Доходи <span className="lowercase">(Оплата)</span>
@@ -212,7 +220,7 @@ function BusinessTable({
             isIncome={false}
             isOccurrence={false}
           />
-          <TableRow>
+          {/* <TableRow>
             <TableCell>Амортизація</TableCell>
           </TableRow>
           <DataRows
@@ -227,7 +235,7 @@ function BusinessTable({
             isPlus
             isIncome={false}
             isOccurrence={false}
-          />
+          /> */}
           <TableRow>
             <TableCell>Витрати заг-вир</TableCell>
           </TableRow>
@@ -476,6 +484,14 @@ function BusinessTable({
                   }, 0)}
             </TableCell>
           </TableRow>
+          <TableRow className="bg-black  hover:bg-black">
+            <TableCell
+              colSpan={120}
+              className="text-center text-white uppercase hover:bg-black"
+            >
+              Розрахунок прибутку
+            </TableCell>
+          </TableRow>
           <TableRow>
             <TableCell className="uppercase font-semibold">
               Доходи <span className="lowercase">(виникнення)</span>
@@ -580,7 +596,8 @@ function BusinessTable({
                       (cost) =>
                         i == //@ts-ignore
                           new Date(cost.dateOfOccurrence).getMonth() &&
-                        cost.isIncome
+                        cost.isIncome &&
+                        (cost.costSubtype == null || cost.costSubtype == "")
                     )
                     .reduce((p, c) => {
                       //@ts-ignore
@@ -640,7 +657,8 @@ function BusinessTable({
                       (cost) =>
                         i == //@ts-ignore
                           new Date(cost.dateOfOccurrence).getMonth() &&
-                        cost.isIncome
+                        cost.isIncome &&
+                        (cost.costSubtype == null || cost.costSubtype == "")
                     )
                     .reduce((p, c) => {
                       //@ts-ignore

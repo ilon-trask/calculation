@@ -1,20 +1,22 @@
 import { BusType } from "@/app/data/Cost.actions";
 import { TableCell, TableRow } from "@/components/ui/table";
 import React, { useEffect, useState } from "react";
-import BusinessPopUp from "../../../BusinessPopUp";
+import CreateBusinessRowPopUp from "../../../CreateBusinessRowPopUp";
 import { PlusSquare, HelpCircle, PenSquare } from "lucide-react";
 import { UnitOfMeasurement } from "@prisma/client";
 import BusinessPlanHelpAlert from "../../../BusinessPlanHelpAlert";
+import UpdateBusinessRowPopUp from "../../../UpdateBusinessRowPopUp";
 
-type ValueType = {
+export type busTableValueType = {
+  id: number;
   dateOfCost: Date;
-  price: number;
-  amount: number;
+  price: number | "";
+  amount: number | "";
   dateOfOccurrence: Date;
 };
 
 export type busTableType = Omit<BusType, "amount" | "price" | "dateOfCost"> & {
-  values: ValueType[];
+  values: busTableValueType[];
 };
 
 function choseDate(isOccurrence: boolean, cost: busTableType) {
@@ -59,6 +61,7 @@ function DataRows({
         ...el,
         values: [
           {
+            id: el.id,
             dateOfCost: el.dateOfCost!,
             amount: el.amount,
             price: el.price!,
@@ -74,10 +77,11 @@ function DataRows({
           el.unitOfMeasurementId === insideEl.unitOfMeasurementId
         ) {
           insideRes.values.push({
+            id: insideEl.id,
             amount: insideEl.amount,
             dateOfCost: insideEl.dateOfCost!,
             price: insideEl.price!,
-            dateOfOccurrence: el.dateOfOccurrence!,
+            dateOfOccurrence: insideEl.dateOfOccurrence!,
           });
           costsArr.splice(j, 1);
           j--;
@@ -95,7 +99,13 @@ function DataRows({
         <TableRow key={cost.id}>
           <TableCell>
             <div className="flex items-center">
-              <PenSquare className="cursor-pointer" />
+              <UpdateBusinessRowPopUp
+                data={cost}
+                serverUserId={serverUserId}
+                units={units}
+              >
+                <PenSquare className="cursor-pointer" />
+              </UpdateBusinessRowPopUp>
               {cost.name}
             </div>
           </TableCell>
@@ -112,10 +122,10 @@ function DataRows({
             );
             if (el == 4) {
               const yearSum = cost.values.reduce(
-                (p, c) => p + c.amount * c.price,
+                (p, c) => p + +c.amount * +c.price,
                 0
               );
-              const yearAmount = cost.values.reduce((p, c) => p + c.amount, 0);
+              const yearAmount = cost.values.reduce((p, c) => p + +c.amount, 0);
               return (
                 <React.Fragment key={el}>
                   <TableCell>{yearAmount}</TableCell>
@@ -128,7 +138,8 @@ function DataRows({
             }
             const costData = cost.values.find(
               (value) =>
-                new Date(choseDate(isOccurrence, cost)).getMonth() + 1 ==
+                //@ts-ignore
+                new Date(choseDate(isOccurrence, value)).getMonth() + 1 ==
                 (thisQuarter.id - 1) * 3 + el
             );
             if (costData) {
@@ -137,16 +148,16 @@ function DataRows({
                   <TableCell>{costData.amount}</TableCell>
                   <TableCell>{costData.price}</TableCell>
                   <TableCell className="bg-slate-100">
-                    {costData.amount * costData.price!}
+                    {+costData.amount * +costData.price!}
                   </TableCell>
                 </React.Fragment>
               );
             } else {
               return (
                 <React.Fragment key={el}>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>0</TableCell>
+                  <TableCell>0</TableCell>
+                  <TableCell>0</TableCell>
                 </React.Fragment>
               );
             }
@@ -158,7 +169,7 @@ function DataRows({
         <TableCell>
           <div className="flex items-center justify-between">
             {isPlus ? (
-              <BusinessPopUp
+              <CreateBusinessRowPopUp
                 units={units}
                 serverUserId={serverUserId}
                 calculationId={calculationId}
@@ -167,7 +178,7 @@ function DataRows({
                 costs={preparedCosts}
               >
                 <PlusSquare className="cursor-pointer" />
-              </BusinessPopUp>
+              </CreateBusinessRowPopUp>
             ) : null}
             <BusinessPlanHelpAlert>
               <HelpCircle className="cursor-pointer" />

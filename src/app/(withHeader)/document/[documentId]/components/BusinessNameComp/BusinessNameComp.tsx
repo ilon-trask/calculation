@@ -15,7 +15,7 @@ import {
   SelectSeparator,
   SelectItem,
 } from "@/components/ui/select";
-import { RowStateType } from "../BusinessPopUp";
+import { RowStateType } from "../CreateBusinessRowPopUp";
 import ChangeBusinessName from "./ChangeBusinessName";
 
 function BusinessNameComp({

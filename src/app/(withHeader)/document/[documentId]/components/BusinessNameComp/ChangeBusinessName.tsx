@@ -21,7 +21,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createUnit } from "@/app/data/units.actions";
-import { RowStateType } from "../BusinessPopUp";
+import { RowStateType } from "../CreateBusinessRowPopUp";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Назва не може бути порожня" }),
