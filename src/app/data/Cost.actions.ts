@@ -8,7 +8,19 @@ import {
   busTableValueType,
 } from "../(withHeader)/document/[documentId]/components/Tables/BusinessTable/components/DataRows";
 
-type createCostType = Omit<Cost, "id" | "createdAt" | "updatedAt">;
+type createCostType = Omit<
+  Cost,
+  "id" | "createdAt" | "updatedAt" | "section" | "type" | "note"
+> & {
+  type?: string | null;
+  note?: string | null;
+  section?: string | null;
+};
+type updateCostType = createCostType & {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 export interface CostWithUnit extends Cost {
   unitOfMeasurement?: UnitOfMeasurement;
@@ -24,8 +36,9 @@ type DefectiveActType = Omit<WorkSetType, "section"> & {
 type CalculationType = Omit<CostWithUnit, "note"> & {
   section: "Калькуляція (скорочена)";
 };
-export type BusType = Omit<CostWithUnit, "note" | "type" | "section"> & {
+export type BusType = Omit<CostWithUnit, "note" | "section" | "price"> & {
   section: "Розрахунок бізнес-плану";
+  price: number;
 };
 
 export type CostType = Omit<CostWithUnit, "note" | "price"> &
@@ -40,21 +53,13 @@ export type CostType = Omit<CostWithUnit, "note" | "price"> &
   );
 
 export async function createCost(values: createCostType) {
-  const res = await prismadb.cost.create({
-    data: values,
-  });
+  const res = await prismadb.cost.create({ data: values });
   return res;
 }
 
-export async function updateCost(values: Cost) {
+export async function updateCost(values: updateCostType) {
   const cost = await prismadb.cost.update({
-    data: {
-      ...values,
-      //@ts-ignore
-      amount: +values.amount,
-      //@ts-ignore
-      price: +values.price,
-    },
+    data: values,
     where: { id: values.id },
   });
   return cost;

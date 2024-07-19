@@ -29,7 +29,7 @@ function PageContent({
           className="flex flex-col justify-center"
         >
           <h1 className="font-semibold lg:text-6xl md:text-4xl sm:text-3xl text-2xl text-center mx-6">
-            Розрахунок техніко-економічних показників діяльності організацій
+            Роз техніко-економічних показників діяльності організацій
           </h1>
           <p className="text-2xl text-center mt-14">
             <span className="font-semibold">Template</span> формування та

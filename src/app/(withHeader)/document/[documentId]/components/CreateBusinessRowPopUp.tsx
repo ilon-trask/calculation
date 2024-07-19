@@ -17,6 +17,16 @@ import { createCost } from "@/app/data/Cost.actions";
 import { useRouter } from "next/navigation";
 import BusinessNameComp from "./BusinessNameComp/BusinessNameComp";
 import { busTableType } from "./Tables/BusinessTable/components/DataRows";
+import {
+  SelectItem,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { typeArr } from "./Tables/DashboardTable/components/ActiveRow";
+import { TypesOfType } from "./Tables/DashboardTable/DashboardTable";
 
 export type RowStateType = {
   name: string;
@@ -25,6 +35,7 @@ export type RowStateType = {
   price: string | number;
   date: string;
   dateOfOccurrence: string;
+  type: TypesOfType | "";
 };
 
 function BusinessPopUp({
@@ -35,6 +46,7 @@ function BusinessPopUp({
   isIncome,
   costSubtype,
   costs,
+  activityType,
 }: {
   children: JSX.Element;
   units: UnitOfMeasurement[];
@@ -43,6 +55,7 @@ function BusinessPopUp({
   isIncome: boolean;
   costSubtype: string;
   costs: busTableType[];
+  activityType: "операційна" | "інвестиційна" | null;
 }) {
   const [rowState, setRowState] = useState<RowStateType>({
     name: "",
@@ -51,6 +64,7 @@ function BusinessPopUp({
     price: "",
     unitOfMeasurementId: 0,
     dateOfOccurrence: "",
+    type: "",
   });
   const router = useRouter();
 
@@ -138,6 +152,31 @@ function BusinessPopUp({
                 }}
               />
             </div>
+            <div>
+              Товарна структура
+              <Select
+                value={rowState.type}
+                onValueChange={(e) => {
+                  setRowState((prev) => ({
+                    ...prev,
+                    type: e as TypesOfType,
+                  }));
+                }}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Тип" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {typeArr.map((el) => (
+                      <SelectItem value={el.name} key={el.name}>
+                        {el.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </DialogHeader>
         <DialogFooter>
@@ -146,22 +185,19 @@ function BusinessPopUp({
               <Button
                 onClick={() => {
                   const dateOfCost = new Date(rowState.date);
-                  //@ts-ignore
                   const dateOfOccurrence = new Date(rowState.dateOfOccurrence);
                   const { date, ...newRowState } = rowState;
-                  const cost = createCost(
-                    //@ts-ignore
-                    {
-                      ...newRowState,
-                      amount: +rowState.amount,
-                      price: +rowState.price,
-                      dateOfCost,
-                      dateOfOccurrence,
-                      calculationId,
-                      costSubtype,
-                      isIncome: true,
-                    }
-                  );
+                  const cost = createCost({
+                    ...newRowState,
+                    amount: +rowState.amount,
+                    price: +rowState.price,
+                    dateOfCost,
+                    dateOfOccurrence,
+                    calculationId,
+                    costSubtype,
+                    isIncome: true,
+                    activityType,
+                  });
                   router.refresh();
                 }}
               >
@@ -171,22 +207,19 @@ function BusinessPopUp({
               <Button
                 onClick={() => {
                   const dateOfCost = new Date(rowState.date);
-                  //@ts-ignore
                   const dateOfOccurrence = new Date(rowState.dateOfOccurrence);
                   const { date, ...newRowState } = rowState;
-                  const cost = createCost(
-                    //@ts-ignore
-                    {
-                      ...newRowState,
-                      amount: +rowState.amount,
-                      price: +rowState.price,
-                      dateOfOccurrence,
-                      dateOfCost,
-                      calculationId,
-                      costSubtype,
-                      isIncome: false,
-                    }
-                  );
+                  const cost = createCost({
+                    ...newRowState,
+                    amount: +rowState.amount,
+                    price: +rowState.price,
+                    dateOfOccurrence,
+                    dateOfCost,
+                    calculationId,
+                    costSubtype,
+                    isIncome: false,
+                    activityType,
+                  });
                   router.refresh();
                 }}
               >

@@ -22,12 +22,12 @@ type partRow = Omit<CostWithUnit, "id" | "amount" | "price" | "type"> & {
   clientId: number;
   amount: string | number;
 };
-type CalcType = partRow & {
+export type CalcType = partRow & {
   section: "Калькуляція (скорочена)";
   type: TypesOfType | "";
   price: string | number;
 };
-type AktType = partRow & {
+export type AktType = partRow & {
   section: "Дефектний акт (скорочений)";
   note: string;
 };

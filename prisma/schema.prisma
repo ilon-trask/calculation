@@ -60,4 +60,5 @@ model Cost {
   costSubtype         String?
   dateOfCost          DateTime?
   dateOfOccurrence    DateTime?
+  activityType        String?
 }

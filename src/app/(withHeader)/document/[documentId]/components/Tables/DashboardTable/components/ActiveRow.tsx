@@ -1,7 +1,7 @@
 "use client";
 
 import { createCost, deleteCost, updateCost } from "@/app/data/Cost.actions";
-import { RowType, TypesOfType } from "../DashboardTable";
+import { AktType, CalcType, RowType, TypesOfType } from "../DashboardTable";
 import {
   Dispatch,
   MutableRefObject,
@@ -35,42 +35,43 @@ export const typeArr = [
 ] as const;
 
 async function createCostHandler(values: RowType) {
+  const { price, type } = values as any;
   if (values.id) {
-    const cost = await updateCost(
-      //@ts-ignore
-      {
-        id: values.id!,
-        amount: +values.amount,
-        calculationId: values.calculationId,
-        name: values.name,
-        //@ts-ignore
-        price: +values.price,
-        //@ts-ignore
-        type: values.type,
-        unitOfMeasurementId: values.unitOfMeasurementId,
-        createdAt: values.createdAt,
-        updatedAt: values.updatedAt,
-        note: values.note,
-        section: values.section,
-      }
-    );
+    const cost = await updateCost({
+      id: values.id!,
+      amount: +values.amount,
+      calculationId: values.calculationId,
+      name: values.name,
+      price: +price || null,
+      type: type || null,
+      unitOfMeasurementId: values.unitOfMeasurementId,
+      createdAt: values.createdAt,
+      updatedAt: values.updatedAt,
+      note: values.note,
+      section: values.section,
+      costSubtype: null,
+      dateOfCost: null,
+      dateOfOccurrence: null,
+      isIncome: null,
+      activityType: null,
+    });
     return cost;
   } else {
-    const cost = await createCost(
-      //@ts-ignore
-      {
-        amount: +values.amount,
-        calculationId: values.calculationId,
-        name: values.name,
-        //@ts-ignore
-        price: +values.price,
-        //@ts-ignore
-        type: values.type,
-        unitOfMeasurementId: values.unitOfMeasurementId,
-        note: values.note,
-        section: values.section,
-      }
-    );
+    const cost = await createCost({
+      amount: +values.amount,
+      calculationId: values.calculationId,
+      name: values.name,
+      price: +price || null,
+      type: type || null,
+      unitOfMeasurementId: values.unitOfMeasurementId,
+      note: values.note,
+      section: values.section,
+      costSubtype: null,
+      dateOfCost: null,
+      dateOfOccurrence: null,
+      isIncome: null,
+      activityType: null,
+    });
     return cost;
   }
 }
@@ -94,6 +95,7 @@ function ActiveRow({
 
   let check = false;
   const [rowState, setRowState] = useState<RowType>(data);
+
   const router = useRouter();
   const clearTimeouts = () => {
     timeIdsArr.current.forEach((el) => clearTimeout(el));
@@ -107,8 +109,8 @@ function ActiveRow({
         if (check) {
           if (
             !TABLE_HEADS.filter((el) => el.label != "sum")
-              //@ts-ignore
-              .map((el) => !!rowState[el.label])
+
+              .map((el) => !!rowState[el.label as keyof RowType])
               .reduce((p, c) => {
                 if (!c) return false;
                 return p;
@@ -127,9 +129,10 @@ function ActiveRow({
       }, 2000);
       timeIdsArr.current.push(timeoutId);
     },
-    //@ts-ignore
-    TABLE_HEADS.map((el) => rowState[el.label])
-  ); //@ts-ignore
+
+    TABLE_HEADS.map((el) => rowState[el.label as keyof RowType])
+  );
+  //@ts-ignore
   const cost = +rowState.amount * +rowState.price || 0;
 
   return (
@@ -186,13 +189,13 @@ function ActiveRow({
                 />
               </TableCell>
             );
-          if (el.label == "note")
+          if (el.label == "note") {
+            const state = rowState as AktType;
             return (
               <TableCell key={el.name}>
                 <Input
                   placeholder="Примітка"
-                  //@ts-ignore
-                  value={rowState.note}
+                  value={state.note}
                   onChange={(e) => {
                     clearTimeouts();
                     setRowState((prev) => ({
@@ -203,11 +206,13 @@ function ActiveRow({
                 />
               </TableCell>
             );
-          if (el.label == "type")
+          }
+          if (el.label == "type") {
+            const state = rowState as CalcType;
             return (
               <TableCell key={el.name}>
-                <Select //@ts-ignore
-                  value={rowState.type}
+                <Select
+                  value={state.type}
                   onValueChange={(e) => {
                     clearTimeouts();
                     setRowState((prev) => ({
@@ -231,14 +236,15 @@ function ActiveRow({
                 </Select>
               </TableCell>
             );
-
-          if (el.label == "price")
+          }
+          if (el.label == "price") {
+            const state = rowState as CalcType;
             return (
               <TableCell key={el.name}>
                 <Input
                   type="number"
-                  placeholder="Ціна" //@ts-ignore
-                  value={rowState.price}
+                  placeholder="Ціна"
+                  value={state.price}
                   onChange={(e) => {
                     clearTimeouts();
                     setRowState((prev) => ({ ...prev, price: e.target.value }));
@@ -246,6 +252,7 @@ function ActiveRow({
                 />
               </TableCell>
             );
+          }
           if (el.label == "sum") {
             return (
               <TableCell key={el.name} className="text-right">

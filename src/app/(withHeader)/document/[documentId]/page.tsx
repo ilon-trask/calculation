@@ -1,4 +1,4 @@
-import React, { RefObject } from "react";
+import React from "react";
 import Breadcrumb from "./components/Breadcrumb";
 import {
   CalculationType,
@@ -22,7 +22,7 @@ const SET_WORK_TABLE_HEADS = [
   },
   { name: "Кількість", isNumber: true, label: "amount" },
   { name: "Примітка", isNumber: false, label: "note" },
-];
+] as const;
 
 const CALCULATION_TABLE_HEADS = [
   { name: "Назва", isNumber: false, label: "name" },
@@ -35,7 +35,7 @@ const CALCULATION_TABLE_HEADS = [
   { name: "Ціна", isNumber: true, label: "price" },
   { name: "Кількість", isNumber: true, label: "amount" },
   { name: "Сума", isNumber: true, label: "sum" },
-];
+] as const;
 
 const INVOICE_TABLE_HEADS = [
   { name: "Назва", isNumber: false, label: "name" },
@@ -47,9 +47,12 @@ const INVOICE_TABLE_HEADS = [
   { name: "Ціна", isNumber: true, label: "price" },
   { name: "Кількість", isNumber: true, label: "amount" },
   { name: "Сума", isNumber: true, label: "sum" },
-];
+] as const;
 
-export type TableHeadsType = typeof SET_WORK_TABLE_HEADS;
+export type TableHeadsType =
+  | typeof SET_WORK_TABLE_HEADS
+  | typeof CALCULATION_TABLE_HEADS
+  | typeof INVOICE_TABLE_HEADS;
 
 function Table({
   calculation,
@@ -127,6 +130,7 @@ function Table({
         serverUserId={userId!}
         calculationId={calculation.id}
         costs={calculation.costs as any}
+        isOwner={isOwner}
       />
     );
   }
