@@ -20,6 +20,13 @@ import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import DataRows from "./components/DataRows";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import CreateBusinessPlanDocPopUp from "./components/CreateBusinessPlanDocPopUp";
 
 const quarters = [
   { id: 1, name: "1 квартал", children: ["Січень", "Лютий", "Березень"] },
@@ -28,6 +35,20 @@ const quarters = [
   { id: 4, name: "4 квартал", children: ["Жовтень", "Листопад", "Грудень"] },
 ] as const;
 type quarterType = (typeof quarters)[number]["name"];
+
+export const businessDocs = [
+  {
+    id: 1,
+    name: "План руху грошових коштів",
+    link: "business-plan-of-expenses",
+  },
+  {
+    id: 2,
+    name: "Калькуляція",
+    link: "calculation",
+  },
+] as const;
+export type businessDocType = (typeof businessDocs)[number]["name"] | "";
 
 function BusinessTable({
   units,
@@ -65,7 +86,8 @@ function BusinessTable({
   }, [costs]);
 
   const [open, setOpen] = useState(false);
-
+  const [docType, setDocType] = useState<businessDocType>("");
+  const [isOpenDoc, setIsOpenDoc] = useState(false);
   if (!thisQuarter) throw new Error("thisQuarter is null");
 
   return (
@@ -117,7 +139,31 @@ function BusinessTable({
           ))}
         </div>
 
-        <Button>Розрахунокові документи</Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="h-10 px-4 py-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90">
+            Розрахунокові документи
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {businessDocs.map((el) => (
+              <DropdownMenuItem
+                key={el.id}
+                onClick={() => {
+                  setIsOpenDoc(true);
+                  setDocType(el.name);
+                }}
+                className="cursor-pointer"
+              >
+                {el.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <CreateBusinessPlanDocPopUp
+          isOpen={isOpenDoc}
+          setIsOpen={setIsOpenDoc}
+          section={docType as businessDocType}
+          serverUserId={serverUserId}
+        />
       </div>
       <Table>
         <TableHeader>
