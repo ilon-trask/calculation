@@ -3,17 +3,17 @@ import getUser from "@/app/hooks/getUser";
 import React from "react";
 import SubordinatePageContent from "./SubordinatePageContent";
 
-type Props = {
+export type SubordinatePageProps = {
   params: {
     documentId: string;
     section: string;
     from: string;
     to: string;
-    type: string;
+    type: "All" | "Incomes" | "Expenses";
   };
 };
 
-async function page({ params }: Props) {
+async function page({ params }: SubordinatePageProps) {
   const calculation = +params.documentId
     ? await getCalculationWithItems({ calculationId: +params.documentId })
     : null;
@@ -22,7 +22,16 @@ async function page({ params }: Props) {
   return (
     <div>
       {calculation.name}
-      <SubordinatePageContent params={params} />
+      <SubordinatePageContent
+        params={params}
+        //@ts-ignore
+        costs={calculation.costs.filter((el) => {
+          const date = new Date(el.dateOfCost || "");
+          return (
+            date >= new Date(params.from) && date <= new Date(params.to + "-01")
+          );
+        })}
+      />
     </div>
   );
 }

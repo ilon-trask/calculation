@@ -22,8 +22,8 @@ import {
 } from "@/components/ui/table";
 import { Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { busTableType } from "./Tables/BusinessTable/components/DataRows";
-import UnitOfMeasurementComp from "./UnitOfMeasurementComp/UnitOfMeasurementComp";
+import { busTableType } from "./DataRows";
+import UnitOfMeasurementComp from "../../../UnitOfMeasurementComp/UnitOfMeasurementComp";
 import { UnitOfMeasurement } from "@prisma/client";
 import { updateBusinessPlanRow } from "@/app/data/Cost.actions";
 import { useRouter } from "next/navigation";

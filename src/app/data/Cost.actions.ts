@@ -6,7 +6,7 @@ import { DocsType } from "./Docs";
 import {
   busTableType,
   busTableValueType,
-} from "../(withHeader)/document/[documentId]/components/Tables/BusinessTable/components/DataRows";
+} from "../(withHeader)/document/[documentId]/components/Tables/BusinessTablePage/components/DataRows";
 
 type createCostType = Omit<
   Cost,

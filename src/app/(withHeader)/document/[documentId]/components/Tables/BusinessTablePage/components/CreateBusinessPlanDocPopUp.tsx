@@ -7,7 +7,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import React, { Dispatch, SetStateAction } from "react";
@@ -23,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
-import { businessDocs, businessDocType } from "../BusinessTable";
+import { businessDocs, businessDocType } from "./BusinessPlanSettings";
 import {
   Select,
   SelectContent,
@@ -33,8 +32,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const typeOfMoveForSelect = ["Всі", "Доходи", "Витрати"] as const;
-const typesOfMove = [...typeOfMoveForSelect, ""] as const;
+const typeOfMoveForSelect = [
+  { name: "Всі", value: "All" },
+  { name: "Доходи", value: "Incomes" },
+  { name: "Витрати", value: "Expenses" },
+] as const;
+const moveValues = typeOfMoveForSelect.map((el) => el.value);
+type moveValuesType = (typeof moveValues)[number];
+const typesOfMove = [...moveValues, ""] as [moveValuesType | ""];
 
 const formSchema = z.object({
   from: z.string(),
@@ -155,8 +160,8 @@ function CreateBusinessPlanDocPopUp({
                           <SelectContent>
                             <SelectGroup>
                               {typeOfMoveForSelect.map((el) => (
-                                <SelectItem value={el} key={el}>
-                                  {el}
+                                <SelectItem value={el.value} key={el.value}>
+                                  {el.name}
                                 </SelectItem>
                               ))}
                             </SelectGroup>

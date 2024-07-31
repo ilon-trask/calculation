@@ -9,7 +9,7 @@ import { UnitOfMeasurement } from "@prisma/client";
 import WorkSetTable from "./components/Tables/DashboardTable/DashboardTable";
 import getUser from "@/app/hooks/getUser";
 import DocumentTitle from "./components/DocumentTitle";
-import BusinessTable from "./components/Tables/BusinessTable/BusinessTable";
+import BusinessTablePage from "./components/Tables/BusinessTablePage/BusinessTablePage";
 
 //дефектний акт
 //набір робіт
@@ -125,7 +125,7 @@ function Table({
 
   if (calculation.section == "Розрахунок бізнес-плану") {
     return (
-      <BusinessTable
+      <BusinessTablePage
         units={units}
         serverUserId={userId!}
         calculationId={calculation.id}

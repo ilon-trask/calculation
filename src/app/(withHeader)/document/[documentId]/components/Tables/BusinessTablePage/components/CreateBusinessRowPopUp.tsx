@@ -9,14 +9,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import UnitOfMeasurementComp from "./UnitOfMeasurementComp/UnitOfMeasurementComp";
+import UnitOfMeasurementComp from "../../../UnitOfMeasurementComp/UnitOfMeasurementComp";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { UnitOfMeasurement } from "@prisma/client";
 import { createCost } from "@/app/data/Cost.actions";
 import { useRouter } from "next/navigation";
-import BusinessNameComp from "./BusinessNameComp/BusinessNameComp";
-import { busTableType } from "./Tables/BusinessTable/components/DataRows";
+import BusinessNameComp from "../../../BusinessNameComp/BusinessNameComp";
+import { busTableType } from "./DataRows";
 import {
   SelectItem,
   Select,
@@ -25,8 +25,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { typeArr } from "./Tables/DashboardTable/components/ActiveRow";
-import { TypesOfType } from "./Tables/DashboardTable/DashboardTable";
+import { typeArr } from "../../DashboardTable/components/ActiveRow";
+import { TypesOfType } from "../../DashboardTable/DashboardTable";
 
 export type RowStateType = {
   name: string;

@@ -1,11 +1,11 @@
 import { BusType } from "@/app/data/Cost.actions";
 import { TableCell, TableRow } from "@/components/ui/table";
 import React, { useEffect, useState } from "react";
-import CreateBusinessRowPopUp from "../../../CreateBusinessRowPopUp";
+import CreateBusinessRowPopUp from "./CreateBusinessRowPopUp";
 import { PlusSquare, HelpCircle, PenSquare } from "lucide-react";
 import { UnitOfMeasurement } from "@prisma/client";
-import BusinessPlanHelpAlert from "../../../BusinessPlanHelpAlert";
-import UpdateBusinessRowPopUp from "../../../UpdateBusinessRowPopUp";
+import BusinessPlanHelpAlert from "./BusinessPlanHelpAlert";
+import UpdateBusinessRowPopUp from "./UpdateBusinessRowPopUp";
 import { TypesOfType } from "../../DashboardTable/DashboardTable";
 
 export type busTableValueType = {
