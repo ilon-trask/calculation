@@ -1,5 +1,5 @@
 import { getCalculationWithItems } from "@/app/data/Calculation.actions";
-import getUser from "@/app/hooks/getUser";
+import { getUser } from "@/app/hooks/getUser";
 import React from "react";
 import SubordinatePageContent from "./SubordinatePageContent";
 

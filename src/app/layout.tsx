@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import getUser from "./hooks/getUser";
+import { getUser } from "./hooks/getUser";
 import CreateUserUuid from "./(withHeader)/components/CreateUserUuid";
 
 export const metadata: Metadata = {

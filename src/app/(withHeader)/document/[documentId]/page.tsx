@@ -7,7 +7,7 @@ import {
 import prismadb from "@/lib/prismadb";
 import { UnitOfMeasurement } from "@prisma/client";
 import WorkSetTable from "./components/Tables/DashboardTable/DashboardTable";
-import getUser from "@/app/hooks/getUser";
+import { getUser } from "@/app/hooks/getUser";
 import DocumentTitle from "./components/DocumentTitle";
 import BusinessTablePage from "./components/Tables/BusinessTablePage/BusinessTablePage";
 

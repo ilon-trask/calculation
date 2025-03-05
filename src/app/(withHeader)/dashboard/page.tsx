@@ -1,7 +1,7 @@
 import React from "react";
 import { getCalculations } from "../../data/Calculation.actions";
 import DashboardContent from "./components/DashboardContent";
-import getUser from "@/app/hooks/getUser";
+import { getUser } from "@/app/hooks/getUser";
 import supabaseServer from "@/lib/supabaseServer";
 
 async function page() {

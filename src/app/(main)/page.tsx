@@ -1,5 +1,5 @@
 import supabaseServer from "@/lib/supabaseServer";
-import getUser from "../hooks/getUser";
+import { getUser } from "../hooks/getUser";
 import PageContent from "./PageContent";
 
 export default async function Home() {
