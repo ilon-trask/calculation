@@ -139,12 +139,11 @@ function Table({
 }
 
 async function page({
-  params,
-  searchParams,
+  params: paramsPromise,
 }: {
-  params: { documentId: string };
-  searchParams: {};
+  params: Promise<{ documentId: string }>;
 }) {
+  const params = await paramsPromise;
   const calculation = +params.documentId
     ? await getCalculationWithItems({ calculationId: +params.documentId })
     : null;

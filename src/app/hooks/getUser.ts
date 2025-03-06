@@ -5,7 +5,7 @@ import { v4 } from "uuid";
 
 export async function getUser() {
   "use server";
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   // Get cookie
   const userId = cookieStore.get('userId')?.value;

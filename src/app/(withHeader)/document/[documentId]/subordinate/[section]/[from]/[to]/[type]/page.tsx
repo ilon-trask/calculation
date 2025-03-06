@@ -12,8 +12,12 @@ export type SubordinatePageProps = {
     type: "All" | "Incomes" | "Expenses";
   };
 };
+type SubordinatePagePropsPromise = {
+  params: Promise<SubordinatePageProps["params"]>;
+};
 
-async function page({ params }: SubordinatePageProps) {
+async function page({ params: paramsPromise }: SubordinatePagePropsPromise) {
+  const params = await paramsPromise;
   const calculation = +params.documentId
     ? await getCalculationWithItems({ calculationId: +params.documentId })
     : null;
